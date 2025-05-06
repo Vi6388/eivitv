@@ -1,0 +1,3 @@
+Deposito : Numero Documento
+cajero :  numero referencia
+transferencia:  numero internot J

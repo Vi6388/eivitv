@@ -1,0 +1,4 @@
+Descripcion 
+cajero:  codigo autorizacion
+trasnferencia:  nombre del dueño del banco
+Depostio:   Sec

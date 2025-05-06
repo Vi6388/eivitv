@@ -1,0 +1,19 @@
+<div class="wrapper">
+
+  <app-preloader></app-preloader>
+  <app-header></app-header>
+  <app-sidebar-right></app-sidebar-right>
+  <app-sidebar-left></app-sidebar-left>
+
+  <div class="content-wrapper">
+    <section class="section-right col-md-12">
+
+      <ng-container *ngIf="objDataManager">
+        <app-manager [objDataManager]="objDataManager"></app-manager>
+      </ng-container>
+
+    </section>
+  </div>
+
+  <app-footer></app-footer>
+</div>

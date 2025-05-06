@@ -1,0 +1,3 @@
+trasnferencia:  numero documento
+Deposito:   numero documento 
+cejaro:   numero tran , codigo de autorizacion

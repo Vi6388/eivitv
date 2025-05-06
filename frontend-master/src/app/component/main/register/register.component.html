@@ -1,0 +1,102 @@
+<div class="login-box"> 
+    <div class="card card-outline card-primary">
+        <div class="card-header text-center">
+            <div class="text-center">
+                <a href="/" class="h1">{{parametros.nombreSistema}}</a>
+            </div>
+            <div class="text-center">
+                <img class="profile-user-img img-fluid img-circle" src="assets/img/icon.png"
+                    alt="{{parametros.nombreSistema}}">
+            </div>
+        </div>
+        <div class="card-body">
+            <p class="login-box-msg">Crear Cuenta</p>
+
+            <form>
+                <div class="input-group mb-3">
+                    <input id="id-register-nombres" type="text" class="form-control" placeholder="Ingrese nombres">
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-user"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-group mb-3">
+                    <input id="id-register-apellidos" type="text" class="form-control" placeholder="Ingrese apellidos">
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-user"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-group mb-3">
+                    <input id="id-register-dni" type="text" class="form-control" placeholder="Ingrese numero de cedula">
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-cc"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-group mb-3">
+                    <input id="id-register-email" type="email" class="form-control" placeholder="Ingrese el email">
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-envelope"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-group mb-3">
+                    <input id="id-register-telefono" type="text" class="form-control"
+                        placeholder="Ingrese numero de telefono o celular">
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-phone"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-group mb-3">
+                    <select id="id-register-provincia" type="text" class="form-control"
+                        placeholder="Seleccione provincia" class="form-control select2 select2-danger"
+                        data-dropdown-css-class="select2-danger" style="width: 100%;">
+                    </select>
+                </div>
+
+                <div class="input-group mb-3">
+                    <select id="id-register-canton" type="text" class="form-control"
+                        placeholder="Seleccione canton" class="form-control select2 select2-danger"
+                        data-dropdown-css-class="select2-danger" style="width: 100%;">
+                    </select>
+                </div>
+
+
+            </form>
+
+            <div class="social-auth-links text-center mt-2 mb-3">
+
+                <a type="button" class="btn btn-block btn-success btn-lg" (click)="Registrarse()">
+                    <i class="fa fa-user-plus"></i> Registrase
+                </a>
+                <br>
+
+                <a type="button" class="btn btn-block btn-outline-primary btn-xs" href="/login">
+                    <i class="fa fa-sign-in"></i> Login
+                </a>
+                <a type="button" class="btn btn-block btn-outline-warning btn-xs" href="/recuperar/clave">
+                    <i class="fa  fa-key"></i> Recuperar Contraseña
+                </a>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- jQuery -->
+<script src="assets/admin-lte/plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="assets/admin-lte/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE App -->
+<script src="assets/admin-lte/dist/js/adminlte.min.js"></script>

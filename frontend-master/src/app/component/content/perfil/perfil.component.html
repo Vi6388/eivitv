@@ -1,0 +1,207 @@
+<div class="wrapper">
+    <app-preloader></app-preloader>
+    <app-header></app-header>
+    <app-sidebar-right></app-sidebar-right>
+    <app-sidebar-left></app-sidebar-left>
+
+    <div class="content-wrapper">
+
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="card card-primary card-outline">
+                            <div class="card-body box-profile">
+                                <div class="text-center">
+                                    <img class="profile-user-img img-fluid img-circle" src="{{dataUsuario.foto_img}}"
+                                        onerror="this.src='assets/img/default/user-men.jpg';"
+                                        alt="{{dataUsuario.nombre_rol }}" />
+                                </div>
+
+                                <h3 class="profile-username text-center">{{dataUsuario.apellidos}}
+                                    {{dataUsuario.nombres}}
+                                </h3>
+
+                                <p class="text-muted text-center">{{dataUsuario.nombre_rol }} </p>
+
+                                <ul class="list-group list-group-unbordered mb-1">
+                                    <strong><i class="fas fa-at mr-1"></i>Correo</strong>
+                                    <p class="text-muted">{{dataUsuario.correo}} </p>
+
+                                    <strong><i class="fa fa-get-pocket mr-1"></i>DNI</strong>
+                                    <p class="text-muted">{{dataUsuario.dni}} </p>
+
+                                    <strong><i class="fas  fa-phone-square mr-1"></i>Telefono</strong>
+                                    <p class="text-muted">{{dataUsuario.telefono}} </p>
+
+                                    <strong><i class="fas fa-map-marker-alt mr-1"></i>Pais</strong>
+                                    <p class="text-muted">{{dataUsuario.pais}} </p>
+
+                                    <strong><i class="fas fa-map-marker-alt mr-1"></i>Provincia</strong>
+                                    <p class="text-muted">{{dataUsuario.provincia}} </p>
+
+                                    <strong><i class="fas fa-map-marker-alt mr-1"></i>Canton</strong>
+                                    <p class="text-muted">{{dataUsuario.canton}} </p>
+
+                                    <strong><i class="fas fa-map-marker-alt mr-1"></i>Dirección</strong>
+                                    <p class="text-muted">{{dataUsuario.direccion}} </p>
+                                </ul>
+
+                                <a (click)="cargarVistaModalCambiarClave()" class="btn btn-primary btn-block"><b>Cambiar
+                                        Contraseña</b></a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-md-9">
+                        <div class="card">
+                            <div class="card-header p-2">
+                                <ul class="nav nav-pills">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" href="#activity" data-toggle="tab">Actividades</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#settings" data-toggle="tab">Configurar</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="card-body">
+                                <div class="tab-content">
+                                    <div class="active tab-pane" id="activity">
+
+                                        <div *ngIf="msjActividades" class="callout callout-warning">
+                                            <h5>Mensaje:</h5>
+                                            <p>{{ msjActividades}}</p>
+                                        </div>
+
+
+                                        <div *ngFor="let item of  dataActividades; index as i; first as isFirst"
+                                            class="post">
+                                            <div class="user-block">
+                                                <img class="img-circle img-bordered-sm" src="{{item.icono}}"
+                                                    alt="user image" />
+                                                <span class="username"> <a href="#">{{item.nombre}}</a></span>
+                                                <span class="description">{{item.fecha}}</span>
+                                            </div>
+                                            <p>{{item.esquema}} </p>
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-pane" id="settings">
+                                        <form class="form-horizontal">
+                                            <div class="form-group row">
+                                                <label for="in-foto-img" class="col-sm-2 col-form-label">Foto</label>
+                                                <div class="col-sm-10">
+                                                    <input type="file" class="form-control" id="in-foto-img"
+                                                        placeholder="Ingrese imagen o foto de perfil" />
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <label for="in-fondo-img" class="col-sm-2 col-form-label">Fondo</label>
+                                                <div class="col-sm-10">
+                                                    <input type="file" class="form-control" id="in-fondo-img"
+                                                        placeholder="Ingrese imagen o foto de Fondo" />
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <label for="in-nombre" class="col-sm-2 col-form-label">Nombres</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" id="in-nombre"
+                                                        placeholder="Ingrese Nombres" value="{{dataUsuario.nombres}}" disabled/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="in-apellido"
+                                                    class="col-sm-2 col-form-label">Apellidos</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" id="in-apellido"
+                                                        placeholder="Ingrese Apellidos"
+                                                        value="{{dataUsuario.apellidos}}" disabled/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="in-dni" class="col-sm-2 col-form-label">DNI</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" id="in-dni"
+                                                        placeholder="Ingrese Cedula , RUC o Pasaporte"
+                                                        value="{{dataUsuario.dni}}" disabled/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="in-correo" class="col-sm-2 col-form-label" >Correo</label>
+                                                <div class="col-sm-10">
+                                                    <input type="email" class="form-control" id="in-correo"
+                                                        placeholder="Ingrese Correo Electronico"
+                                                        value="{{dataUsuario.correo}}" disabled />
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <label for="in-telefono"
+                                                    class="col-sm-2 col-form-label">Telefono</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" id="in-telefono"
+                                                        placeholder="Ingrese Telefono"
+                                                        value="{{dataUsuario.telefono}}" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="in-pais" class="col-sm-2 col-form-label" >Pais</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" id="in-pais"
+                                                        placeholder="Ingrese pais" value="{{dataUsuario.pais}}"/>
+                                                </div>
+                                            </div>
+
+
+
+                                            <div class="form-group row">
+                                                <label for="in-provincia"
+                                                    class="col-sm-2 col-form-label">Provincia</label>
+                                                <div class="col-sm-10">
+                                                    <select id="in-provincia" type="text" class="form-control"
+                                                        placeholder="Seleccione provincia"
+                                                        class="form-control select2 select2-danger"
+                                                        data-dropdown-css-class="select2-danger" style="width: 100%;">
+                                                    </select> 
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="in-canton" class="col-sm-2 col-form-label">Canton</label>
+                                                <div class="col-sm-10">
+                                                    <select id="in-canton" type="text" class="form-control"
+                                                        placeholder="Seleccione canton"
+                                                        class="form-control select2 select2-danger"
+                                                        data-dropdown-css-class="select2-danger" style="width: 100%;">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="in-direccion"
+                                                    class="col-sm-2 col-form-label">Dirección</label>
+                                                <div class="col-sm-10">
+                                                    <textarea type="text" class="form-control" id="in-direccion"
+                                                        placeholder="Ingrese Dirección"
+                                                        value="{{dataUsuario.direccion}}"></textarea>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <button type="button" class="btn btn-block btn-outline-info btn-sm"
+                                                    (click)="ActualizarDatosUsuario()">Actualizar Datos</button>
+                                            </div>
+
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <app-footer></app-footer>
+</div>

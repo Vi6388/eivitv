@@ -1,0 +1,2 @@
+trasnferncia:  codigo de referencia
+deposito:  codigo de papeleta

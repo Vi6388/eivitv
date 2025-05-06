@@ -1,0 +1,3 @@
+barrio:  numero correspondal
+tranferencia:  nombre del dueño de la cuenta bancaria
+Depositvo : nombre del quien iso el pago

@@ -1,0 +1,7 @@
+{
+    "/api/*":  {
+        "target": "https://service-eivitv.herokuapp.com",
+        "secure": false,
+        "logLevel": "debug"
+    }
+}

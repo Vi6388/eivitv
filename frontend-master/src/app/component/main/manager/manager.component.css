@@ -1,0 +1,7 @@
+.dataTables_filter {
+    float: left !important;
+ }
+
+ 
+
+ select:invalid { color: gray; }

@@ -1,0 +1,56 @@
+<div class="wrapper">
+  <app-preloader></app-preloader>
+  <app-header></app-header>
+  <app-sidebar-right></app-sidebar-right>
+  <app-sidebar-left></app-sidebar-left>
+  <div class="content-wrapper">
+    <section class="content"> 
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-12 row">
+            <div *ngFor="let cuenta of data_cuentas; index as i; first as isFirst" class="col-md-4">
+              <div class="card card-widget widget-user-2">
+                <div class="widget-user-header bg-primary">
+                  <div class="widget-user-image">
+                    <img class="img-circle elevation-2" src="{{ cuenta.banco_icono }}" alt="{{ cuenta.banco_nombre }}" />
+                  </div>
+                  <h3 class="widget-user-username">{{ cuenta.banco_nombre }}</h3>
+                </div>
+                <div class="card-footer p-0">
+                  <ul class="nav flex-column">
+                    <li class="nav-item">
+                      <a class="nav-link">
+                        <b>Cuenta:</b> <span class="float-right">{{ cuenta.cuenta }}</span>
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link">
+                        <b>Nombre:</b><span class="float-right">{{ cuenta.nombre }}</span>
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <div class="card" style="margin: 10px">
+                        <div class="card-header">
+                          <h3 class="card-title center"> <b>Canales de pago</b> </h3>
+                        </div>
+                        <div *ngIf="cuenta.array_canales" class="card-body">
+                          <button *ngFor="let canal of cuenta.array_canales; index as i;" type="button"
+                            class="btn btn-block bg-gradient-info btn-xs" (click)="CargarModalPago( cuenta, canal)">
+                            {{ canal.nombre}}
+                          </button>
+                        </div>
+                      </div>
+                    </li>
+                  </ul> 
+
+                </div>
+              </div>
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

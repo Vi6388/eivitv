@@ -1,0 +1,16 @@
+
+.card-header{    
+    padding-top: 5px;
+    padding-bottom: 2px; 
+  }
+  
+  .card-body{    
+  background: dimgrey;
+  padding-top: 5px;
+  padding-bottom: 5px; 
+  }
+ 
+  th { white-space: nowrap; }
+
+
+ 

@@ -1,0 +1,33 @@
+<aside class="control-sidebar control-sidebar-dark">
+
+    <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+
+        <div class="col-md-12">
+            <div class="card card-widget widget-user">
+                <div class="widget-user-header text-white"
+                    style="background: url('{{dataUsuario.fondo_img }}') center center;">
+                    <h5 class="widget-user-desc text-center">{{dataUsuario.nombre }} {{dataUsuario.apellido }}</h5> 
+                    <h6 class="widget-user-desc text-center">{{dataUsuario.nombre_rol }}</h6>
+                </div>
+                <div class="widget-user-image">
+                    <img class="img-circle" src="{{dataUsuario.foto_img}}"  onerror="this.src='assets/img/default/user-men.jpg';"  alt="{{dataUsuario.nombre_rol }}">
+                </div>
+                <div class="card-footer text-center">
+
+                    <div class="pull-left">
+                        <button type="button" class="btn btn-block btn-outline-info" (click)="visualizarPerfil()">
+                            <i class="fa  fa-street-view"></i> Perfil
+                        </button>
+                    </div>
+                    <div class="pull-right">
+                        <button type="button" class="btn btn-block btn-outline-info" (click)="cerrarSesion()">
+                            <i class="fa fa-sign-out"></i> Salir
+                        </button>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</aside>

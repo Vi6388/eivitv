@@ -1,0 +1,3 @@
+Tranferencia:  numero de cuenta del dueño
+deposto: secuencial
+barrio: codigo de comercio

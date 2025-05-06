@@ -1,0 +1,119 @@
+/* You can add global styles to this file, and also import other style files */
+
+.logo-ajustes {
+    width: 100px;
+    margin-top: -10px;
+}
+
+.img-box-comprobante {
+    position: relative;
+    width: auto;
+    background-color: rgb(162, 162, 162);
+}
+
+.img-comprobante {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+}
+
+.cupo {
+    color: #ab1927;
+}
+
+a:hover {
+    cursor: pointer;
+}
+
+.hidden_form_row {
+    display: none;
+}
+
+.container-fluid {
+    padding-bottom: 60px;
+    padding-top: 15px;
+}
+
+
+/*dasboard*/
+
+.mar-div {
+    margin-bottom: 15px;
+}
+
+.ms-box-focus {
+    cursor: pointer;
+    cursor: hand;
+}
+
+.ms-box-focus-active {
+    border: 2px solid #000;
+    -webkit-box-shadow: 0px 10px 13px -7px #000000, 5px 5px 15px 5px rgb(0 0 0 / 0%);
+    box-shadow: 0px 10px 13px -7px #000000, 5px 5px 15px 5px rgb(0 0 0 / 0%);
+}
+
+.ms-widget-user-header {
+    border-top-left-radius: 0.25rem;
+    border-top-right-radius: 0.25rem;
+    padding: 1rem;
+    text-align: center;
+    height: 60px;
+    justify-content: center;
+}
+
+.ms-widget-user-image {
+    left: 50%;
+    margin-left: -45px;
+    position: absolute;
+    top: 5px;
+    justify-content: center;
+}
+
+.ms-widget-user-image img {
+    width: 50px;
+    height: 50px;
+    justify-content: center;
+    text-align: center;
+}
+
+.ms-card-footer {
+    padding: 0.75rem 1.25rem;
+    background-color: rgba(0, 0, 0, .03);
+    border-top: 0 solid rgba(0, 0, 0, .125);
+    padding-top: 0px;
+    padding-bottom: 0px;
+    padding-right: 5px;
+    padding-left: 5px;
+}
+
+.ms-card {
+    margin-left: 10px;
+    margin-right: 10px;
+    width: 115px;
+    height: 100px;
+}
+
+.ms-box-focus {
+    margin-bottom: 0px;
+}
+
+.description-text {
+    white-space: nowrap;
+    padding: 0 0.5em;
+    margin-bottom: 2px;
+    /*  border: solid; */
+}
+
+.description-block {
+    margin-top: 1px;
+    margin-bottom: 1px;
+    justify-content: center;
+    width: 100%;
+    max-width: 18em;
+}
+
+.cursor_selector_pro {
+    cursor:url('assets/default/icons8-select-cursor-48.png'), auto;
+  }
