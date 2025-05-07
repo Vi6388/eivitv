@@ -8,7 +8,7 @@ var config = {
     descripcion: "Website",
     tokenSecreto: "-.T0k3nS3cr3t0-MicroStart.-",
     tokenTimeSeccion: 60 * 60 * 24, // expires in 24 hours
-    IpClienteDefault: "192.168.0.1", // ip diferenciar el uso de terminales 
+    // IpClienteDefault: "192.168.130.1", // ip diferenciar el uso de terminales 
     jwt: false, //deshabilita el uso de token jwt  
     local: {
       
@@ -17,10 +17,11 @@ var config = {
         },
         CONNECTION_BD_PG: {
             DATABASE_URL:null,
-            host: '192.168.100.6', 
+            host: 'localhost', 
             port: 5432, 
             user:  'postgres', 
-            password: 'jac1995car', 
+            // password: 'jac1995car', 
+            password: '1234',
             database: 'EIVITV_PRO', 
             charset: 'utf8',
             ssl: false
@@ -41,7 +42,8 @@ var config = {
             host: 'localhost', 
             port: 5432, 
             user:  'postgres', 
-            password: 'jac1995car', 
+            // password: 'jac1995car', 
+            password: '1234',
             database: 'EIVITV_PRO', 
             charset: 'utf8',
             ssl: false

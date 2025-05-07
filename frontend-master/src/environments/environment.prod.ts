@@ -6,7 +6,7 @@ export const environment = {
   VERSION: 'pro-1.0.2',
   //direccion de web service o backend 
   //Nota: colocar la direccion del servicio web desplegado
-  URL_SERVICE: 'https://eivitv-backend.onrender.com', 
+  URL_SERVICE: 'http://localhost:5006', 
   //configuracion de botones de contacto 
   //Nota: esta valores puede variar segun indique el cliente.
   BUTTON_FACEBOOK: "797662853679573",

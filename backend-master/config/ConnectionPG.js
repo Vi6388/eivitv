@@ -46,10 +46,6 @@ if (ssl == true || ssl == 'true') {
     Cadena.connection.ssl = { 'rejectUnauthorized': false };
 }
 
-
-
-console.log(Cadena);
-
 //modifica string a decimales 
 const pg = require('pg');
 //const PG_DECIMAL_OID = 1700;
