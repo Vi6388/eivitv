@@ -1,10 +1,10 @@
 class NotificarWhatsAppRequestModel {
   constructor(data) {
 
-    if (data?.phone !== undefined) {
+    if (!data || data.phone === undefined) {
       this.phone = data.phone;
     }
-    if (data?.text !== undefined) {
+    if (!data || data.text === undefined) {
       this.text = data.text;
     }
 

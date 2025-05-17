@@ -1,21 +1,21 @@
 class DetalleRequestModel {
   constructor(data) {
-    if (data?.id !== undefined) {
+    if (!data || data.id === undefined) {
       this.id = data.id;
     }
-    if (data?.id_parametro_cab !== undefined) {
+    if (!data || data.id_parametro_cab === undefined) {
       this.id_parametro_cab = data.id_parametro_cab;
     }
-    if (data?.codigo !== undefined) {
+    if (!data || data.codigo === undefined) {
       this.codigo = data.codigo;
     }
-    if (data?.valor !== undefined) {
+    if (!data || data.valor === undefined) {
       this.valor = data.valor;
     }
-    if (data?.descripcion !== undefined) {
+    if (!data || data.descripcion === undefined) {
       this.descripcion = data.descripcion;
     }
-    if (data?.estado !== undefined) {
+    if (!data || data.estado === undefined) {
       this.estado = data.estado;
     }
   }

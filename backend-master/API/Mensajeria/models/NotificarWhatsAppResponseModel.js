@@ -1,7 +1,7 @@
 class NotificarWhatsAppResponsetModel {
     constructor(data) {
         
-        if (data?.url !== undefined) {
+        if (!data || data.url === undefined) {
             this.url = data.url;
         }
         

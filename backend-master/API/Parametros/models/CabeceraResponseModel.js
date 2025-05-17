@@ -1,15 +1,15 @@
 class CabeceraRequestModel {
     constructor(data) {
-        if (data?.id !== undefined) {
+        if (!data || data.id === undefined) {
             this.id = data.id;
         }
-        if (data?.codigo !== undefined) {
+        if (!data || data.codigo === undefined) {
             this.codigo = data.codigo;
         }
-        if (data?.nombre !== undefined) {
+        if (!data || data.nombre === undefined) {
             this.nombre = data.nombre;
         }
-        if (data?.descripcion !== undefined) {
+        if (!data || data.descripcion === undefined) {
             this.descripcion = data.descripcion;
         }
 
