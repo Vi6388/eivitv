@@ -306,8 +306,10 @@ var CRUDS = [
             { nombre: 'aplica_iva', search: false, insert: true, update: true },
             { nombre: 'icono', search: false, insert: true, update: true },
             { nombre: 'estado', search: false, insert: false, update: true },
+            { nombre: 'correo_repetido', search: false, insert: true, update: true },
+            { nombre: 'correo', search: false, insert: false, update: true },
             { nombre: 'created_at', search: false, insert: false, update: false },
-            { nombre: 'updated_at', search: false, insert: false, update: false },
+            { nombre: 'updated_at', search: false, insert: true, update: false },
             //DATOS REQUERIDOS POR RED FACIITO
             { nombre: 'identidad', search: false, insert: true, update: true },
             { nombre: 'comision_aplica', search: false, insert: true, update: true },
@@ -436,6 +438,8 @@ var CRUDS = [
             { nombre: 'id_producto', search: false, insert: true, update: true },
             { nombre: 'codigo', search: true, insert: true, update: true, only: true },
             { nombre: 'proveedor', search: true, insert: true, update: true },
+            { nombre: 'dias_limite_venta', search: false, insert: true, update: true },
+            { nombre: 'fecha_limite_venta', search: false, insert: false, update: true },
             { nombre: 'nombre', search: true, insert: true, update: true },
             { nombre: 'descripcion', search: true, insert: true, update: true },
             { nombre: 'costo', search: true, insert: true, update: true },
@@ -449,6 +453,7 @@ var CRUDS = [
             { nombre: 'estado', search: false, insert: false, update: true },
             { nombre: 'created_at', search: false, insert: false, update: false },
             { nombre: 'updated_at', search: false, insert: false, update: false },
+            { nombre: 'pantallas_disponibles', search: false, insert: true, update: true },
         ],
     },
 

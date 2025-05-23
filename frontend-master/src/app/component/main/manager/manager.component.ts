@@ -267,12 +267,22 @@ export class ManagerComponent implements OnInit {
       form_show_img(manager, row, val);
     });
 
-
+    objDataTable.on('change', '.dt-control-correo-repetido-' + strIdentificador, (e: any) => {
+      let correo_repetido = e.currentTarget.checked
+      let tr = e.currentTarget.closest('tr');
+      let row = objDataTable.row(tr);
+      row.data().correo_repetido = correo_repetido ? 1 : 0;
+      accion_editar_line(row);
+    });
 
 
     const renderizar = (objDataTable: any) => {
       setTimeout(() => {
         $('.dt-control-status-' + this.strIdentificador).bootstrapToggle({
+          on: 'Habilitado',
+          off: 'Deshabilitado'
+        });
+        $('.dt-control-correo-repetido-' + this.strIdentificador).bootstrapToggle({
           on: 'Habilitado',
           off: 'Deshabilitado'
         });
@@ -298,7 +308,13 @@ export class ManagerComponent implements OnInit {
         }
 
         if (element.type == "switch") {
-          element.render = render_estado;
+          let extraData = element.data;
+          element.render = (
+            e: any,
+            type: any,
+            row: any,
+            meta: any
+          ) => render_estado(e, type, row, meta, extraData);
         }
         if (element.type == "select") {
           element.render = render_selector;
@@ -329,9 +345,14 @@ export class ManagerComponent implements OnInit {
       `;
     }
 
-    function render_estado(e: any, type: any, row: any, meta: any) {
-      var status = row.estado == 1 ? " checked " : " ";
-      return `<input class="btn-sm dt-control-status-${strIdentificador}" type="checkbox" ${status} data-toggle="toggle"   data-onstyle="success" data-offstyle="danger" data-size="sm">`;
+    function render_estado(e: any, type: any, row: any, meta: any, extraData: any) {
+      if (extraData == 'estado') {
+        var status = row.estado == 1 ? " checked " : " ";
+        return `<input class="btn-sm dt-control-status-${strIdentificador}" type="checkbox" ${status} data-toggle="toggle"   data-onstyle="success" data-offstyle="danger" data-size="sm">`;
+      } else {
+        var status = row[extraData] == 1 ? " checked " : " ";
+        return `<input class="btn-sm dt-control-correo-repetido-${strIdentificador}" type="checkbox" ${status} data-toggle="toggle"   data-onstyle="success" data-offstyle="danger" data-size="sm">`;
+      }
     }
 
     function render_opciones(td: any, cellData: any, rowData: any, row: any, col: any) {
@@ -395,7 +416,9 @@ export class ManagerComponent implements OnInit {
 
     const generarControles = (objDataManager: any, row: any, form: String) => {
       let controles = "";
-      let data: any = row ? row.data() : {};
+      // let data: any = row ? row.data() : {};
+      let data: any = (row && typeof row.data === 'function') ? row.data() : {};
+
 
       for (let index = 0; index < objDataManager.columns.length; index++) {
         const el = objDataManager.columns[index];
@@ -523,6 +546,77 @@ export class ManagerComponent implements OnInit {
               `            </div>` +
               `        </div>`;
             break;
+
+          case type == 'multiselect':
+
+            if (!el || !Array.isArray(el.list)) {
+              console.warn(`No se encontró la lista válida para '${id}'`);
+              break;
+            }
+
+            type OptionType = { id: string; text: string };
+
+            let listData2: OptionType[] = el.list.map((e: any) => ({
+              id: e.v,
+              text: e.k
+            }));
+
+            let selectedValues: string[] = [];
+            if (typeof valor === 'string') {
+              try {
+                if (valor.startsWith('{') && valor.endsWith('}')) {
+                  // Convertir {"1","3"} → ["1", "3"]
+                  selectedValues = valor
+                    .slice(1, -1) // Quitar llaves
+                    .split(',')   // Separar por coma
+                    .map(v => v.trim().replace(/^"(.*)"$/, '$1')); // Limpiar comillas
+                } else {
+                  selectedValues = JSON.parse(valor);
+                }
+              } catch {
+                selectedValues = [];
+              }
+            } else if (Array.isArray(valor)) {
+              selectedValues = valor;
+            } else if (valor) {
+              selectedValues = [valor];
+            }
+
+            if (isCreate) {
+              selectedValues = listData2.map(opt => opt.id);
+            }
+
+            controles +=
+              `<div class="col-sm-12 ${hidden}">` +
+              `  <div class="form-group">` +
+              `    <label class="capitalize">${labelRequired + title}</label>` +
+              `    <select id="${id}" name="${id}[]" class="form-control select2" multiple="multiple" style="width: 100%;" ${disabled}>` +
+              `    </select>` +
+              `  </div>` +
+              `</div>`;
+
+            if (isEdit || isCreate) {
+              setTimeout(() => {
+                const $select = $(`#${id}`);
+
+                $select.select2({
+                  data: listData2,
+                  tags: true,
+                  dropdownParent: $('.ajs-modal')
+                });
+
+                selectedValues.forEach((val: string) => {
+                  if (!listData2.find((opt: OptionType) => opt.id === val)) {
+                    $select.append(new Option(val, val, true, true));
+                  }
+                });
+
+                $select.val(selectedValues).trigger('change');
+
+              }, 500);
+            }
+            break;
+
 
           default:
 

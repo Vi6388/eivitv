@@ -586,79 +586,173 @@ export class UtilitariosService {
 
   }
 
-  public static formatHTMLContent(elementId: any) {
-    // Obtener el contenido del elemento con el ID proporcionado
-    var originalText = document.getElementById(elementId).innerHTML;
+  public static formatHTMLContent(elementId: any): string {
+    const originalElement = document.getElementById(elementId);
+    if (!originalElement) return '';
 
-    // Obtener el contenido dentro del div
-    var divContent = originalText; //.match(/<div[^>]*>([\s\S]*?)<\/div>/s)[1];
+    const divContent = originalElement.innerHTML;
 
-    // Crear un objeto JSON con atributos
-    var atributos: any = {
-      'Nombre': '',
-      'RUC': '',
-      'Comprobante': '',
-      'NumeroComprobante': '',
-      'TipoRecaudacion': '',
-      'Referencia': '',
-      'NombrePersona': '',
-      'Agencia': '',
-      'SecADQ_SW': '',
-      'UUID': '',
-      'FechaHora': '',
-      'Ciudad': '',
-      'ValorTransaccion': '',
-      'Comision': '',
-      'Total': '',
-      'Mensaje': '',
-      'OperadoPor': '',
-      'Factura': '',
-      'EnlaceConsulta': ''
+    const atributos: any = {
+      Nombre: '',
+      RUC: '',
+      Comprobante: '',
+      NumeroComprobante: '',
+      TipoRecaudacion: '',
+      Referencia: '',
+      NombrePersona: '',
+      Identificacion: '',
+      Agencia: '',
+      SecADQ_SW: '',
+      UUID: '',
+      FechaHora: '',
+      Ciudad: '',
+      ValorTransaccion: '',
+      Comision: '',
+      Total: '',
+      Mensaje: '',
+      OperadoPor: '',
+      Factura: '',
+      EnlaceConsulta: '',
+      pantallasAsignadas: '',
+      fecha: '',
+      hora: '',
+      clave: '',
+      ciudad: '',
+      operadoPor: '',
+      mensaje: '',
     };
 
-    // Obtener el contenido de cada etiqueta p y asignar valores al objeto JSON
-    divContent.match(/<p class="font">(.*?)<\/p>/g).forEach(function (match: any, index: any) {
-      var key = Object.keys(atributos)[index];
-      atributos[key] = match.replace(/<\/?p[^>]*>/g, '');
+    // Extraer contenido de cada <p>
+    const matches = divContent.match(/<p[^>]*>(.*?)<\/p>/g) || [];
+    const limpiarHTML = (html: string) => html.replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').trim();
+
+    matches.forEach((match: string) => {
+      const texto = limpiarHTML(match);
+      const [clave, ...resto] = texto.split(':');
+      const valor = resto.join(':').trim();
+
+      const clave1 = clave.trim().toLowerCase();
+
+      switch (clave.trim().toLowerCase()) {
+        case 'agente':
+          atributos.Nombre = valor;
+          break;
+        case 'fecha':
+          atributos.RUC = valor;
+          break;
+        case 'hora':
+          atributos.Comprobante = valor;
+          break;
+        case 'transacción':
+          atributos.NumeroComprobante = valor;
+          break;
+        case 'producto digital':
+          atributos.TipoRecaudacion = valor;
+          break;
+        case 'descripción':
+          atributos.Referencia = valor;
+          break;
+        case 'total':
+          atributos.Total = valor;
+          break;
+        case 'codigo':
+          atributos.Agencia = valor;
+          break;
+        case 'usuario':
+          atributos.SecADQ_SW = valor;
+          break;
+        case 'pin':
+          atributos.UUID = valor;
+          break;
+        case 'clave':
+          atributos.UUID = valor;
+          break;
+        case 'fecha':
+          atributos.fecha = valor;
+          break;
+        case 'hora':
+          atributos.hora = valor;
+          break;
+        case 'recomendacion':
+          atributos.Recomendacion = valor;
+          break;
+        case 'ciudad':
+          atributos.Ciudad = valor;
+          break;
+        case 'pantallas asignadas':
+          atributos.pantallasAsignadas = valor;
+          break;
+        case 'operado por':
+          atributos.OperadoPor = valor;
+          break;
+        case 'mensaje':
+          atributos.Mensaje = valor;
+          break;
+        // puedes agregar más campos aquí si aparecen en otros recibos
+      }
     });
 
-    // Mostrar el objeto JSON en la consola
-    console.log(atributos);
+    const mensajeWhatsApp = `
+    *${atributos.Nombre}*
 
-    // Crear un mensaje formateado para WhatsApp
-    var mensajeWhatsApp = `
-       *${atributos.Nombre}*
-       
-       _${atributos.RUC}_
-       _${atributos.Comprobante}_
-       *Número de Comprobante:* ${atributos.NumeroComprobante}
-       
-       -----------------------------------------------------
-       *Tipo de Recaudación:* ${atributos.TipoRecaudacion}
-       *Referencia:* ${atributos.Referencia}
-       *Nombre:* ${atributos.NombrePersona}
-       *Identificación:* ${atributos.Identificacion}
-       
-       -----------------------------------------------------
-       *Agencia:* ${atributos.Agencia}
-       *Sec ADQ/SW:* ${atributos.SecADQ_SW}
-       *UUID:* ${atributos.UUID}
-       *Fecha y Hora:* ${atributos.FechaHora}
-       *Ciudad:* ${atributos.Ciudad}
-       
-       -----------------------------------------------------
-       *Valor de Transacción:* ${atributos.ValorTransaccion}
-       *Comisión:* ${atributos.Comision}
-       *Total:* ${atributos.Total}
-       *Mensaje:* ${atributos.Mensaje}
-       *Operado Por:* ${atributos.OperadoPor}
-       *Factura:* ${atributos.Factura}
-       
-       -----------------------------------------------------
-       *Consulta tu documento en:* ${atributos.EnlaceConsulta}
-       `;
+    _${atributos.RUC}_
+    _${atributos.Comprobante}_
+    *Número de Comprobante:* ${atributos.NumeroComprobante}
 
-    // Mostrar el mensaje en la consola
+    -----------------------------------------------------
+    *Tipo de Recaudación:* ${atributos.TipoRecaudacion}
+    *Referencia:* ${atributos.Referencia}
+    *Pantallas Asignadas:* ${atributos.pantallasAsignadas}
+    *Nombre:* ${atributos.Nombre}
+
+    -----------------------------------------------------
+    *Agencia:* ${atributos.Agencia}
+    *Sec ADQ/SW:* ${atributos.SecADQ_SW}
+    *UUID:* ${atributos.UUID}
+    *Fecha y Hora:* ${atributos.RUC}
+
+    -----------------------------------------------------
+    *Valor de Transacción* ${atributos.ValorTransaccion}
+    *Total:* ${atributos.Total}
+    *Mensaje:* ${atributos.Mensaje}
+    *Operado Por:* ${atributos.OperadoPor}
+    *Factura:* ${atributos.NumeroComprobante}
+
+    `.trim();
+
+    /* const mensajeWhatsApp = `
+    *${atributos.Nombre}*
+
+    _${atributos.RUC}_
+    _${atributos.Comprobante}_
+    *Número de Comprobante:* ${atributos.NumeroComprobante}
+
+    -----------------------------------------------------
+    *Tipo de Recaudación:* ${atributos.TipoRecaudacion}
+    *Referencia:* ${atributos.Referencia}
+    *Pantallas Asignadas:* ${atributos.pantallasAsignadas}
+    *Nombre:* ${atributos.Nombre}
+    *Identificación:* ${atributos.Identificacion}
+
+    -----------------------------------------------------
+    *Agencia:* ${atributos.Agencia}
+    *Sec ADQ/SW:* ${atributos.SecADQ_SW}
+    *UUID:* ${atributos.UUID}
+    *Fecha y Hora:* ${atributos.RUC}
+    *Ciudad:* ${atributos.Ciudad}
+
+    -----------------------------------------------------
+    *Valor de Transacción:* ${atributos.ValorTransaccion}
+    *Comisión:* ${atributos.Comision}
+    *Total:* ${atributos.Total}
+    *Mensaje:* ${atributos.Mensaje}
+    *Operado Por:* ${atributos.OperadoPor}
+    *Factura:* ${atributos.Factura}
+
+    -----------------------------------------------------
+    *Consulta tu documento en:* ${atributos.EnlaceConsulta}
+    `.trim(); */
+
     console.log(mensajeWhatsApp);
 
     return mensajeWhatsApp;
