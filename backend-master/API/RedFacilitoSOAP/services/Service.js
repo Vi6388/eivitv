@@ -879,12 +879,12 @@ async function getCuentaRecomendada2(params) {
     ? [
       { column: "cuenta_usada", order: "asc" },
       { column: "digi.numero_perfil", order: "asc" },
-      { column: "cuentcreated_ata_usada", order: "asc" },
+      { column: "created_at", order: "asc" },
       { column: "duracion", order: "asc" }
     ]
     : [
       { column: "digi.numero_perfil", order: "asc" },
-      { column: "cuentcreated_ata_usada", order: "asc" },
+      { column: "created_at", order: "asc" },
       { column: "duracion", order: "asc" }
     ];
 
