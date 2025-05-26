@@ -118,7 +118,8 @@ export class UtilitariosService {
             buttons: [
               { id: 'omitir', text: "<i class='fa fa-arrow-left'></i> Omitir", invokeOnClose: false },
               { id: 'imprimir', text: "<i class='fa fa-print'></i> Imprimir", invokeOnClose: true },
-              { id: 'compartir', text: "<i class='fa fa-whatsapp'></i> Compartir", invokeOnClose: true }
+              { id: 'compartir', text: "<i class='fa fa-whatsapp'></i> Compartir A Numero", invokeOnClose: true },
+              { id: 'compartirContacto', text: "<i class='fa fa-whatsapp'></i> Compartir A Contacto", invokeOnClose: true }
             ],
             focus: {
               element: function () {
@@ -150,6 +151,13 @@ export class UtilitariosService {
               UtilitariosService.printDiv("id_cont_comprobante");
               break;
             case 'compartir':
+              alertify.modalCompartirWhatsapp(null, {
+                onEnviar: function (numero: string) {
+                  UtilitariosService.compartirComprobante("id_cont_comprobante", numero);
+                }
+              });
+              break;
+            case 'compartirContacto':
               UtilitariosService.compartirComprobante("id_cont_comprobante");
               break;
 
@@ -213,6 +221,68 @@ export class UtilitariosService {
     };
 
     alertify.modalRescargarSaldo || alertify.dialog('modalRescargarSaldo', configModalRescargarSaldo);
+
+
+    var configModalCompartirWhatsapp = function () {
+      let config: any = {};
+
+      return {
+        main: function (_content: any, conf: any) {
+          config = conf;
+          let e: any = this;
+          let html = `
+          <div class="form-group p-3">
+            <label for="numeroWhatsapp">Número de WhatsApp:</label>
+            <input type="text" class="form-control" id="numeroWhatsapp" placeholder="Ej: 0912311111" required autocomplete="off" pattern="^[0-9]{9,15}$" title="Ingrese un número válido de WhatsApp (9 a 15 dígitos)">
+          </div>
+        `;
+          e.setContent(html);
+        },
+        setup: function () {
+          return {
+            buttons: [
+              { id: 'cancelar', text: "<i class='fa fa-times'></i> Cancelar", invokeOnClose: false },
+              { id: 'enviar', text: "<i class='fa fa-paper-plane'></i> Enviar", invokeOnClose: false }
+            ],
+            focus: { element: "#numeroWhatsapp", select: true },
+            options: {
+              padding: true,
+              closable: false,
+              maximizable: false,
+              startMaximized: false,
+              transition: 'zoom'
+            }
+          };
+        },
+        callback: function (e: any) {
+          e.cancel = true;
+
+          if (e.button.id === 'cancelar') {
+            alertify.closeAll();
+            return;
+          }
+
+          if (e.button.id === 'enviar') {
+            const input = document.getElementById('numeroWhatsapp') as HTMLInputElement;
+            let numero = input?.value.trim();
+
+            if (!numero) {
+              alertify.error("Debe ingresar un número");
+              return;
+            }
+
+            // Llamar a la función con el número limpio
+            if (typeof config.onEnviar === 'function') {
+              config.onEnviar(numero);
+            }
+
+          }
+        }
+
+      };
+    };
+
+    alertify.modalCompartirWhatsapp || alertify.dialog('modalCompartirWhatsapp', configModalCompartirWhatsapp);
 
   }
 
@@ -576,15 +646,54 @@ export class UtilitariosService {
   }
 
 
-  public static compartirComprobante(divName: any) {
-    var printContents = this.formatHTMLContent(divName);
-    var whatsappLink = 'https://web.whatsapp.com/send/?text=' + encodeURIComponent(printContents);
-    var shareWindow = window.open(whatsappLink, '_blank', 'width=800,height=600,toolbar=0,location=0,status=0,menubar=0,scrollbars=0,left=0,top=0');
-    if (!shareWindow) {
-      alert('La ventana emergente de WhatsApp fue bloqueada. Por favor, habilite las ventanas emergentes en su navegador.');
+  public static compartirComprobante(divId: string, numero: string | null = null) {
+    if (numero) {
+      // Elimina todos los caracteres que no sean dígitos ni el símbolo +
+      numero = numero.replace(/[^\d+]/g, '');
+
+      if (numero.startsWith('+')) {
+        // Si empieza con +, quitamos el + pero no modificamos el número
+        numero = numero.substring(1);
+      } else if (numero.startsWith('09')) {
+        // Ecuador: empieza con 09 => quitar el 0 y agregar 593
+        numero = '593' + numero.substring(1);
+      } else if (numero.startsWith('0')) {
+        // Otro caso que empieza con 0 pero no 09 (por seguridad)
+        numero = '593' + numero.substring(1);
+      } else if (!numero.startsWith('593')) {
+        // Si no empieza con 593 o +, asumimos que le falta el prefijo
+        numero = '593' + numero;
+      }
     }
 
+    const element = document.getElementById(divId);
+    if (!element) {
+      alert("Elemento no encontrado");
+      return;
+    }
+
+    const text = element.innerHTML.trim(); 
+    const encodedText2 = encodeURIComponent(text);
+    var encodedText = this.formatHTMLContent(divId);
+    
+
+    let whatsappURL = `https://web.whatsapp.com/send?text=${encodeURIComponent(encodedText)}`;
+    // let whatsappURL = `https://api.whatsapp.com/send?text=${encodedText}`;
+    if (numero) {
+      whatsappURL = `https://web.whatsapp.com/send?phone=${numero}&text=${encodeURIComponent(encodedText)}`;
+      // whatsappURL = `https://api.whatsapp.com/send?phone=${numero}&text=${encodedText}`;
+    }
+
+    // 🔐 Espera un poco para evitar interferencia con el cierre de modales
+    setTimeout(() => {
+      const win = window.open(whatsappURL, '_blank');
+      if (!win) {
+        alert('La ventana emergente fue bloqueada. Habilita los popups.');
+      }
+    }, 200); // Espera 200ms antes de abrir WhatsApp
   }
+
+
 
   public static formatHTMLContent(elementId: any): string {
     const originalElement = document.getElementById(elementId);
