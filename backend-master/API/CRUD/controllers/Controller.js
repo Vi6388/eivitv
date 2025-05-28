@@ -24,7 +24,7 @@ async function Show(req, res, next) {
 
 async function ShowList(req, res, next) {
     let objResponse = await Service. ShowList(req);
-    res.status(objResponse.status).jsonp(objResponse);    
+    res.status(objResponse.status).jsonp(objResponse);
 }
   
 
