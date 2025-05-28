@@ -197,7 +197,7 @@ export class ManagerComponent implements OnInit {
         style: 'os',
         selector: 'td:first-child'
       },
-      order: [[1, "desc"]],
+      order: [[(manager.order || 1), "desc"]],
       columns: columns,
 
       buttons: {

@@ -222,6 +222,7 @@ async function SelectPagination(body, columns_show, table) {
     objResponse.recordsFiltered = 0;
     objResponse.data = [];
 
+    console.log("here----------------")
     try {
         //CONSULTA DE PAGINACION
         var data_resume = ConnectionBD.knex(table);
