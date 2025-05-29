@@ -1,15 +1,15 @@
-<!-- Carga y estructura -->
+<!-- home.component.html -->
 <app-preloader *ngIf="isLoading"></app-preloader>
 <app-header></app-header>
 <app-sidebar-left></app-sidebar-left>
 <app-sidebar-right></app-sidebar-right>
 
-<!-- Contenido principal -->
 <div class="content-wrapper">
   <section class="content">
     <div class="container-fluid">
       <div class="row">
         <div class="col-12">
+
           <!-- Buscador -->
           <div class="input-group mb-3">
             <label for="id_search_value" class="visually-hidden">Buscar producto o servicio</label>
@@ -35,7 +35,7 @@
           </div>
 
           <!-- Servicios por ciudad -->
-          <div class="card" *ngIf="data_servicios_ciudad?.length">
+          <div class="card" *ngIf="data_servicios_ciudad?.length; else noResults">
             <div class="card-header">
               <h3 class="card-title">{{ dataInit.tituloServiciosCiudad }}</h3>
             </div>
@@ -67,7 +67,7 @@
           </div>
 
           <!-- Productos favoritos -->
-          <div class="card" *ngIf="data_producto_favoritos?.length">
+          <div class="card" *ngIf="data_producto_favoritos?.length; else noResults">
             <div class="card-header">
               <h3 class="card-title">{{ dataInit.tituloFavoritos }}</h3>
             </div>
@@ -99,7 +99,7 @@
           </div>
 
           <!-- Tipos de producto -->
-          <div class="card" *ngIf="data_tipos?.length">
+          <div class="card" *ngIf="data_tipos?.length; else noResults">
             <div class="card-header">
               <h3 class="card-title">{{ dataInit.tituloTipo }}</h3>
             </div>
@@ -130,14 +130,17 @@
             </div>
           </div>
 
-          <!-- Resultado vacío -->
+          <!-- Sin resultados -->
           <ng-template #noResults>
             <div class="alert alert-info text-center mt-3">
               No se encontraron resultados.
             </div>
           </ng-template>
+
         </div>
       </div>
     </div>
   </section>
 </div>
+
+<app-footer></app-footer>
