@@ -3,6 +3,8 @@ import { GlobalService } from 'src/app/service/global.service';
 import { ParametrosService } from 'src/app/service/parametros.service';
 import { UtilitariosService } from 'src/app/service/utilitarios.service';
 import { VerificarCupo } from 'src/app/models/GlobalModels';
+declare var $: any;
+
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
@@ -11,11 +13,18 @@ import { VerificarCupo } from 'src/app/models/GlobalModels';
 export class HeaderComponent implements OnInit {
   public parametros: any = ParametrosService;
 
+  public textType: string = 'password';
+  public data_cupo: VerificarCupo = new VerificarCupo;
+
   constructor() { }
 
- 
+
   ngOnInit(): void {
     this.verificarCupo();
+  }
+
+  showHideValue(): void {
+    this.textType = this.textType === 'text' ? 'password' : 'text';
   }
 
   async visualizar_montos() {
@@ -32,39 +41,38 @@ export class HeaderComponent implements OnInit {
       }
     }
     var icono = "fas fa-money-check-alt";
-    var Html =
-      ` <div style=" margin: 10px;">
-          <div class=" row">
+
+    const saldo = this.textType === 'password' ? '***' : this.data_cupo.total_saldo;
+    const ganancia = this.textType === 'password' ? '***' : this.data_cupo.total_comision;
+
+    const Html = `
+      <div style="margin: 10px;">
+        <div class="row">
           <div class="col-md-6 col-sm-6 col-12">
             <div class="info-box">
-              <span class="info-box-icon bg-info"><i class="fa  fa-rocket"></i></span>
-
+              <span class="info-box-icon bg-info"><i class="fa fa-rocket"></i></span>
               <div class="info-box-content">
                 <span class="info-box-text">Saldo</span>
-                <span class="info-box-number">$${this.data_cupo.total_saldo}</span>
-              </div> 
-            </div> 
-          </div> 
+                <span class="info-box-number">$${saldo}</span>
+              </div>
+            </div>
+          </div>
           <div class="col-md-6 col-sm-6 col-12">
             <div class="info-box">
-              <span class="info-box-icon bg-success"><i class="fa  fa-star"></i></span>
-
+              <span class="info-box-icon bg-success"><i class="fa fa-star"></i></span>
               <div class="info-box-content">
                 <span class="info-box-text">Ganancia</span>
-                <span class="info-box-number">$${this.data_cupo.total_comision}</span>
-              </div> 
-            </div> 
-          </div>   
+                <span class="info-box-number">$${ganancia}</span>
+              </div>
+            </div>
+          </div>
         </div>
-     </div>
+      </div>
     `;
 
     UtilitariosService.Alertify_Modal(icono, titulo, Html, botones);
 
   }
-
-
-  public data_cupo: VerificarCupo = new VerificarCupo;
 
   async verificarCupo() {
     let endPoint = "saldos/visualizar/cupos";

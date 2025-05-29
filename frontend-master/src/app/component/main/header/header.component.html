@@ -7,10 +7,13 @@
         <i class="fas fa-bars"></i>
       </button>
     </li>
-    <li class="nav-item">
+    <li class="nav-item" style="display: flex; justify-content: center; align-items: center;">
       <button type="button" class="btn btn-default btn-block btn-sm nav-link" (click)="visualizar_montos()">
-        Saldo: <b class="cupo">${{data_cupo.total_saldo}}</b>
+        Saldo: <b class="cupo">${{ textType === 'password' ? '***' : data_cupo.total_saldo }}</b>
       </button>
+      <div class="eye-icon" (click)="showHideValue()">
+        <span class="fas " [ngClass]="textType === 'password' ? 'fa-eye' : 'fa-eye-slash'"></span>
+      </div>
     </li>
   </ul>
 
