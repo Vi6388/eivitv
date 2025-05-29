@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
   //Datos  generales
-  NOMBRE_SISTEMA: 'Eivitv',
+  NOMBRE_SISTEMA: 'AKAPAGO',
   ANIO: '2021-2022',
   VERSION: 'pro-1.0.2',
   //direccion de web service o backend 

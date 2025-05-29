@@ -26,9 +26,10 @@
                 </div>
                 <div class="input-group mb-3">
                     <input id="id-login-clave" [type]="passwordType" class="form-control" placeholder="Password" required aria-label="Password" name="password" ngModel>
-                    <div class="input-group-append" (click)="showHidePassword()">
+                    <span class="fas show-icon" [ngClass]="passwordType === 'password' ? 'fa-eye' : 'fa-eye-open'" (click)="showHidePassword()"></span>
+                    <div class="input-group-append">
                         <div class="input-group-text">
-                            <span class="fas" [ngClass]="passwordType === 'password' ? 'fa-lock' : 'fa-unlock'"></span>
+                            <span class="fas fa-lock"></span>
                         </div>
                     </div>
                 </div>                
