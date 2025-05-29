@@ -47,3 +47,7 @@ th {
 .mb-0 {
   margin-bottom: 0px !important;
 }
+
+.align-center {
+  align-items: center;
+}
