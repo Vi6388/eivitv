@@ -1,0 +1,119 @@
+<div class="wrapper">
+  <app-preloader></app-preloader>
+  <app-header></app-header>
+  <app-sidebar-right></app-sidebar-right>
+  <app-sidebar-left></app-sidebar-left>
+
+  <div class="content-wrapper">
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+
+
+
+          <div class="col-12">
+
+            <div class="input-group">
+              <input id="id_search_value" type="text" name="search" class="form-control"
+                placeholder="Ingrese nombre de producto o servicio" (keypress)="onKeyPress($event)">
+              <div class="input-group-append">
+                <button (click)="busquedaDirecta()" type="submit" name="submit" class="btn btn-warning">
+                  <i class="fas fa-search"></i>
+                </button>
+              </div>
+            </div>
+
+            <br>
+            <div *ngIf="data_servicios_ciudad  && data_servicios_ciudad.length > 0" class="card">
+              <div class="card-header">
+                <h3 class="card-title">{{dataInit.tituloServiciosCiudad}}</h3>
+              </div>
+              <div class="card-body">
+                <div id="id_slider_servicios_ciudad" class="slider">
+                  <div *ngFor="let item of data_servicios_ciudad; index as i; first as isFirst"
+                    (dblclick)="showServiciosCiudad(item)">
+                    <div class="col-md-12 col-sm-12 col-12">
+                      <div id="id_producto_ciudad_{{item.id}}" class="info-box bg-info cursor_selector_pro">
+                        <img src="{{item.icono}}" alt="{{item.nombre}}"
+                          style=" width: 96px; height: 96px;">
+                        <div class="info-box-content desktop-view">
+                          <p [innerText]="customerLine(item.nombre,20)"></p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <div *ngIf="data_producto_favoritos && data_producto_favoritos.length > 0" class="card">
+              <div class="card-header">
+                <h3 class="card-title">{{dataInit.tituloFavoritos}}</h3>
+              </div>
+              <div class="card-body">
+                <div id="id_slider_favoritos" class="slider">
+                  <div *ngFor="let item of data_producto_favoritos; index as i; first as isFirst"
+                    (dblclick)="showProductosFavorito(item)">
+                    <div class="col-md-12 col-sm-12 col-12">
+                      <div id="id_producto_favorito_{{item.id}}" class="info-box bg-warning cursor_selector_pro">
+                        <img src="{{item.icono}}" alt="{{item.nombre}}"
+                          style="width: 100px; height: 100px;">
+                        <div class="info-box-content desktop-view">
+                          <p [innerText]="customerLine(item.nombre,20)"></p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="data_tipos && data_tipos.length > 0" class="card">
+              <div class="card-header">
+                <h3 class="card-title">{{dataInit.tituloTipo}}</h3>
+              </div>
+              <div class="card-body">
+                <div id="id_slider_tipos" class="slider">
+                  <div *ngFor="let item of data_tipos; index as i; first as isFirst" (dblclick)="showCategoria(item)">
+                    <div class="col-md-12 col-sm-12 col-12">
+                      <div id="id_tipo_producto_{{item.id}}" class="info-box bg-gradient-blue cursor_selector_pro categoria_list align-center">
+                        <img src="{{item.icono}}" alt="{{item.nombre}}"
+                          style=" width: 100px; height: 100px; padding: 5px;">
+                        <div class="info-box-content">
+                          <p [innerText]="customerLine(item.nombre,20)" class="mb-0 mt-1"></p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="data_publicidad && data_publicidad.length > 0" class="card">
+              <div class="card-header">
+                <h3 class="card-title">{{dataInit.tituloPublicidad}}</h3>
+              </div>
+              <div class="card-body">
+                <div id="id_slider_publicidad" class="slider">
+                  <div *ngFor="let item of data_publicidad; index as i; first as isFirst"
+                    (dblclick)="showPublicidad(item)">
+                    <div class="col-md-12 col-sm-12 col-12">
+                      <div id="id_publicidad_{{item.id}}" class="info-box bg-gradient-red cursor_selector_pro">
+
+                        <img class="elevation-2 publicidad_images" src="{{item.imagen}}" alt="{{item.nombre}}">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+  <app-footer></app-footer>
+</div>
