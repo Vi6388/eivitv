@@ -36,7 +36,7 @@
                       <div id="id_producto_ciudad_{{item.id}}" class="info-box bg-info cursor_selector_pro">
                         <img class="elevation-2" src="{{item.icono}}" alt="{{item.nombre}}"
                           style=" width: 80px; height: 80px; padding:5px;">
-                        <div class="info-box-content">
+                        <div class="info-box-content desktop-view">
                           <p [innerText]="customerLine(item.nombre,20)"></p>
                         </div>
                       </div>
@@ -59,7 +59,7 @@
                       <div id="id_producto_favorito_{{item.id}}" class="info-box bg-warning cursor_selector_pro">
                         <img class="elevation-2" src="{{item.icono}}" alt="{{item.nombre}}"
                           style="width: 100px; height: 100px; padding:5px;">
-                        <div class="info-box-content">
+                        <div class="info-box-content desktop-view">
                           <p [innerText]="customerLine(item.nombre,20)"></p>
                         </div>
                       </div>
@@ -77,11 +77,11 @@
                 <div id="id_slider_tipos" class="slider">
                   <div *ngFor="let item of data_tipos; index as i; first as isFirst" (dblclick)="showCategoria(item)">
                     <div class="col-md-12 col-sm-12 col-12">
-                      <div id="id_tipo_producto_{{item.id}}" class="info-box bg-gradient-blue cursor_selector_pro">
+                      <div id="id_tipo_producto_{{item.id}}" class="info-box bg-gradient-blue cursor_selector_pro categoria_list">
                         <img class="elevation-2" src="{{item.icono}}" alt="{{item.nombre}}"
                           style=" width: 80px; height: 80px; padding:5px;">
                         <div class="info-box-content">
-                          <p [innerText]="customerLine(item.nombre,20)"></p>
+                          <p [innerText]="customerLine(item.nombre,20)" class="mb-0 mt-1"></p>
                         </div>
                       </div>
                     </div>
@@ -101,7 +101,7 @@
                     <div class="col-md-12 col-sm-12 col-12">
                       <div id="id_publicidad_{{item.id}}" class="info-box bg-gradient-red cursor_selector_pro">
               
-                        <img class="elevation-2" src="{{item.imagen}}" alt="{{item.nombre}}" style="padding:5px;">
+                        <img class="elevation-2 publicidad_images" src="{{item.imagen}}" alt="{{item.nombre}}" style="padding:5px;">
                       </div>
                     </div>
                   </div>
