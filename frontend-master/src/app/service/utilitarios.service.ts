@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { usuarioModel } from '../models/UsuarioModel';
+import { BehaviorSubject } from 'rxjs';
 declare var alertify: any;
 declare var $: any;
 declare var window: any;
@@ -19,6 +20,13 @@ export class UtilitariosService {
   */
 
   constructor() { }
+
+  private textTypeSource = new BehaviorSubject<string>('password');
+  currentTextType = this.textTypeSource.asObservable();
+
+  changeTextType(textType: string) {
+    this.textTypeSource.next(textType);
+  }
 
 
   public static alertifyIncializarModal() {

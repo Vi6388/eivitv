@@ -8,7 +8,10 @@
           class="img-circle elevation-2" alt="{{dataUsuario.nombre_rol }}">
       </div>
       <div class="info">
-        <a class="d-block">{{dataUsuario.nombre }} {{dataUsuario.apellido }}</a>
+        <a class="d-block" *ngIf="textType === 'password'; else showUserName">*****</a>
+        <ng-template #showUserName>
+          <a class="d-block">{{ dataUsuario.nombre }} {{ dataUsuario.apellido }}</a>
+        </ng-template>
       </div>
     </div>
 

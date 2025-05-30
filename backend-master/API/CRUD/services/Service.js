@@ -211,7 +211,6 @@ async function SelectPagination(body, columns_show, table) {
     let search = body.search || { value: '', regex: 'false' };
     let search_value = search.value;
     let start = body.start;
-    console.log(body);
     let ordenar = order[0];
     let ordenar_dir = ordenar.dir;
     let ordenar_column = columns[ordenar.column].data;
@@ -222,7 +221,6 @@ async function SelectPagination(body, columns_show, table) {
     objResponse.recordsFiltered = 0;
     objResponse.data = [];
 
-    console.log("here----------------")
     try {
         //CONSULTA DE PAGINACION
         var data_resume = ConnectionBD.knex(table);

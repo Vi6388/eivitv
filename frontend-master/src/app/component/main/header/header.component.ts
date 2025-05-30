@@ -16,15 +16,19 @@ export class HeaderComponent implements OnInit {
   public textType: string = 'password';
   public data_cupo: VerificarCupo = new VerificarCupo;
 
-  constructor() { }
+  constructor(private utilitariosServce: UtilitariosService) { }
 
 
   ngOnInit(): void {
     this.verificarCupo();
+    this.utilitariosServce.currentTextType.subscribe(textType => {
+      this.textType = textType;
+    });
   }
 
   showHideValue(): void {
-    this.textType = this.textType === 'text' ? 'password' : 'text';
+    const textType = this.textType === 'text' ? 'password' : 'text';
+    this.utilitariosServce.changeTextType(textType);
   }
 
   async visualizar_montos() {
