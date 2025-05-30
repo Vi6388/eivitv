@@ -17,5 +17,3 @@ module.exports = {
 notificarWhatsApp
 }
 
-const EmailController = require("../controllers/EmailController");
-router.route(`/${end_point}/enviarCorreo`).post(EmailController.enviarCorreo);
