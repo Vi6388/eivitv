@@ -1,4 +1,7 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AuthService } from 'src/app/service/auth.service';
 import { ParametrosService } from 'src/app/service/parametros.service';
 import { UtilitariosService } from 'src/app/service/utilitarios.service';
@@ -11,19 +14,25 @@ import { UtilitariosService } from 'src/app/service/utilitarios.service';
 export class RecuperarClaveComponent implements OnInit {
 
   parametros: any = {};
-  step: number = 1; // 1: email input, 2: code verification, 3: new password
-  email: string = '';
-  verificationCode: string = '';
-  newPassword: string = '';
-  confirmPassword: string = '';
   loading: boolean = false;
 
-  constructor(
-    private authService: AuthService
-  ) { }
+  recuperarClaveForm: FormGroup;
+  message: string = '';
+  status: number = 0;
 
+  constructor(
+    private fb: FormBuilder,
+    private http: HttpClient,
+    private router: Router
+  ) {
+    this.recuperarClaveForm = this.fb.group({
+      clave: ['', [Validators.required, Validators.minLength(6)]],
+      codigo_verificacion: ['', Validators.required]
+    });
+  }
+  
   ngOnInit(): void {
-    // this.parametros = ParametrosService.parametros;
+    
   }
 
   // async sendRecoveryEmail() {
@@ -96,11 +105,11 @@ export class RecuperarClaveComponent implements OnInit {
   //   this.loading = false;
   // }
 
-  goBack() {
-    if (this.step > 1) {
-      this.step--;
-    } else {
-      window.location.href = '/login';
-    }
-  }
+  // goBack() {
+  //   if (this.step > 1) {
+  //     this.step--;
+  //   } else {
+  //     window.location.href = '/login';
+  //   }
+  // }
 }

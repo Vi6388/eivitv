@@ -1,0 +1,33 @@
+<!-- <div class="container">
+    <h2>Recuperar Contraseña</h2>
+    <form [formGroup]="recuperarClaveForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+            <label for="clave">Nueva Contraseña:</label>
+            <input type="password" id="clave" formControlName="clave" class="form-control" required>
+            <div *ngIf="recuperarClaveForm.get('clave').invalid && (recuperarClaveForm.get('clave').touched || recuperarClaveForm.get('clave').dirty)"
+                class="text-danger">
+                <small *ngIf="recuperarClaveForm.get('clave').errors.required">La contraseña es requerida.</small>
+                <small *ngIf="recuperarClaveForm.get('clave').errors.minlength">La contraseña debe tener al menos 6
+                    caracteres.</small>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="codigo_verificacion">Código de Verificación:</label>
+            <input type="text" id="codigo_verificacion" formControlName="codigo_verificacion" class="form-control"
+                required>
+            <div *ngIf="recuperarClaveForm.get('codigo_verificacion').invalid && (recuperarClaveForm.get('codigo_verificacion').touched || recuperarClaveForm.get('codigo_verificacion').dirty)"
+                class="text-danger">
+                <small *ngIf="recuperarClaveForm.get('codigo_verificacion').errors.required">El código de verificación
+                    es requerido.</small>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" [disabled]="recuperarClaveForm.invalid">Cambiar
+            Contraseña</button>
+    </form>
+
+    <div *ngIf="message" class="mt-3" [ngClass]="{'text-success': status === 201, 'text-danger': status !== 201}">
+        {{ message }}
+    </div>
+</div> -->
