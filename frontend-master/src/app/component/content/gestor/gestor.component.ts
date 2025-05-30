@@ -65,7 +65,11 @@ export class GestorComponent implements OnInit, AfterViewInit {
         });
 
         this.dataModulo.config.opciones = opciones;
-        this.dataModulo.config.order = 3;
+        if(id_modulo === 9) {
+          this.dataModulo.config.order = 3;
+        } else if(id_modulo === 35) {
+          this.dataModulo.config.order = 5;
+        }
 
         this.objDataManager = this.dataModulo.config;
       }
