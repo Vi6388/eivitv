@@ -1,33 +1,67 @@
-<!-- <div class="container">
-    <h2>Recuperar Contraseña</h2>
-    <form [formGroup]="recuperarClaveForm" (ngSubmit)="onSubmit()">
-        <div class="form-group">
-            <label for="clave">Nueva Contraseña:</label>
-            <input type="password" id="clave" formControlName="clave" class="form-control" required>
-            <div *ngIf="recuperarClaveForm.get('clave').invalid && (recuperarClaveForm.get('clave').touched || recuperarClaveForm.get('clave').dirty)"
-                class="text-danger">
-                <small *ngIf="recuperarClaveForm.get('clave').errors.required">La contraseña es requerida.</small>
-                <small *ngIf="recuperarClaveForm.get('clave').errors.minlength">La contraseña debe tener al menos 6
-                    caracteres.</small>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="codigo_verificacion">Código de Verificación:</label>
-            <input type="text" id="codigo_verificacion" formControlName="codigo_verificacion" class="form-control"
-                required>
-            <div *ngIf="recuperarClaveForm.get('codigo_verificacion').invalid && (recuperarClaveForm.get('codigo_verificacion').touched || recuperarClaveForm.get('codigo_verificacion').dirty)"
-                class="text-danger">
-                <small *ngIf="recuperarClaveForm.get('codigo_verificacion').errors.required">El código de verificación
-                    es requerido.</small>
-            </div>
-        </div>
-
-        <button type="submit" class="btn btn-primary" [disabled]="recuperarClaveForm.invalid">Cambiar
-            Contraseña</button>
-    </form>
-
-    <div *ngIf="message" class="mt-3" [ngClass]="{'text-success': status === 201, 'text-danger': status !== 201}">
-        {{ message }}
+<div class="login-box">
+  <div class="card card-outline card-primary">
+    <div class="card-header text-center">
+      <div class="text-center">
+        <a href="/" class="h1">{{parametros.nombreSistema}}</a>
+      </div>
+      <div class="text-center">
+        <img class="profile-user-img img-fluid img-circle" src="assets/img/icon.png" alt="{{parametros.nombreSistema}}">
+      </div>
     </div>
-</div> -->
+    <div class="card-body">
+      <form class="form-horizontal" *ngIf="step === 1">
+        <div class="input-group mb-3">
+          <input id="id-login-email" type="email" class="form-control mt-0" placeholder="Email">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-envelope"></span>
+            </div>
+          </div>
+          <a type="button" class="btn btn-block btn-primary btn-lg RecuperarCambioClave-button mt-3"
+            (click)="GenerarCodigoVerificacion()">
+            <i class="fa fa-paper-plane"></i> Generar Codigo
+          </a>
+        </div>
+      </form>
+
+      <form class="form-horizontal" *ngIf="step === 2">
+        <div class="form-group">
+          <div class="input-group">
+            <input type="text" class="form-control mt-0" id="inc-codigo-verif" placeholder="Codigo de verificación" />
+          </div>
+        </div>
+
+        <div class="input-group mb-3">
+          <input [type]="newPasswordType" class="form-control mt-0" placeholder="Ingrese nueva  contraseña"
+            id="inc-clave" required>
+          <span class="fas show-icon" [ngClass]="newPasswordType === 'password' ? 'fa-eye' : 'fa-eye-slash'"
+            (click)="showHideNewPassword()"></span>
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-lock"></span>
+            </div>
+          </div>
+        </div>
+        <div class="input-group mb-3">
+          <input [type]="confirmPasswordType" class="form-control mt-0" placeholder="Repita la nueva contraseña"
+            id="inc-clave-repite" required>
+          <span class="fas show-icon" [ngClass]="confirmPasswordType === 'password' ? 'fa-eye' : 'fa-eye-slash'"
+            (click)="showHideConfirmPassword()"></span>
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-lock"></span>
+            </div>
+          </div>
+        </div>
+        <a type="button" class="btn btn-block btn-primary btn-lg RecuperarCambioClave-button"
+          (click)="RecuperarCambioClave()">
+          <i class="fa  fa-sign-in"></i> Realizar cambio de contraseña
+        </a>
+      </form>
+
+      <a type="button" class="btn btn-block btn-outline-primary btn-xs mt-3" href="/login">
+        <i class="fa fa-sign-in"></i> Login
+      </a>
+    </div>
+  </div>
+</div>

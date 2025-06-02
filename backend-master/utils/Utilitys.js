@@ -87,10 +87,6 @@ function ConsoleTabInfo(data) {
     }
 }
 
-
-
-
-
 async function hashPassword(data) {
     let saltRounds = 10;
     return promise = new Promise((resolve, reject) => {
@@ -104,7 +100,6 @@ async function hashPassword(data) {
     });
 }
 
-
 function GenerateKey(length) {
     var result = [];
     var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -115,7 +110,6 @@ function GenerateKey(length) {
     }
     return result.join('');
 }
-
 
 async function CalcularMinutosEntreFechas(fecha1, fecha2) {
     var newYear1 = new Date(fecha1);
@@ -137,7 +131,6 @@ async function ModificarDias(fecha, dias) {
     return fecha;
 }
 
-
 function GetDataUsuario(req) {
     let sessionID = req.session.id;
     let usuarios = app.get('session') || [];
@@ -157,7 +150,6 @@ function GetDataUsuario(req) {
     let usuario = usuarios[sessionID];
     return usuario;
 }
-
 
 async function ConvertirBase64File(path, name, base64Str) {
     let ruta = "";
@@ -191,8 +183,6 @@ async function GuardarArchivoBase64(base64Str) {
 
 async function SendEmailGeneral(correos, asunto, content) {
     try {
-
-
         let id_parametro_cab = constante.idParametroGeneral;
         let objDataParametro1 = await ServiceParametro.getDetalle({ id_parametro_cab, codigo: constante.linkBackend });
         let objDataParametro2 = await ServiceParametro.getDetalle({ id_parametro_cab, codigo: constante.linkFacebook });
@@ -209,9 +199,6 @@ async function SendEmailGeneral(correos, asunto, content) {
             logo_estandar: objDataParametro4.valor,
             logo_facebook: objDataParametro5.valor,
         };
-
-
-
 
         let operator_html = await EmailController.FormatoEstandarHTML(dataParameter);
         await EmailController.EnviarEmail({
@@ -246,6 +233,7 @@ function GetPuerto() {
     let port = process.env.PORT || CHTTP.puerto;
     return port;
 }
+
 function GetIP() {
     return ip;
 }

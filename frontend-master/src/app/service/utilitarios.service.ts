@@ -28,11 +28,13 @@ export class UtilitariosService {
     this.textTypeSource.next(textType);
   }
 
+  // Alert Methods
+  public static mostrarAlerta(mensaje: string, tipo: string = 'info'): void {
+    this.Alertify_alert({ mensaje, type: tipo });
+  }
+
 
   public static alertifyIncializarModal() {
-
-
-
 
     var configModalEstandarPrimary = function () {
       return {
@@ -108,6 +110,7 @@ export class UtilitariosService {
       };
     };
 
+    alertify.modalEstandarPrimary || alertify.dialog('modalEstandarPrimary', configModalEstandarPrimary);
     alertify.modalEstandar || alertify.dialog('modalEstandar', configModalEstandar);
     alertify.modalEstandarCategoria || alertify.dialog('modalEstandarCategoria', configModalEstandar);
     alertify.modalEstandarProducto || alertify.dialog('modalEstandarProducto', configModalEstandar);
@@ -294,12 +297,6 @@ export class UtilitariosService {
 
   }
 
-
-
-
-
-
-
   public static async Alertify_Modal(icono: any, titulo: any, html: any, botones: any) {
     //si  closeEvent.cancel  es false se cierra si es true la ventana persiste
 
@@ -339,8 +336,6 @@ export class UtilitariosService {
       });
   }
 
-
-
   public static Alertify_Modal_Uno(titulo: any, html: any) {
 
     alertify
@@ -359,7 +354,6 @@ export class UtilitariosService {
       .maximize();
   }
 
-
   public static Alertify_Modal_Temp(titulo: any, html: any) {
 
     alertify
@@ -377,6 +371,7 @@ export class UtilitariosService {
       })
       .maximize();
   }
+
   public static async Alertify_Modal_Dos(icono: any, titulo: any, html: any, botones: any) {
     let labels: any = {
       ok: botones.ok.titulo,
@@ -440,8 +435,6 @@ export class UtilitariosService {
       });*/
   }
 
-
-
   public static async Alertify_confirmacion(icono: any, titulo: any, html: any, botones: any) {
     alertify.confirm(`<a> <i class="${icono}"></i>  ${titulo}</a>`, html,
       function () {
@@ -464,7 +457,6 @@ export class UtilitariosService {
   public static Alertify_Close() {
     alertify.confirm().close();
   }
-
 
   public static GenerateKeyHex() {
     var str = Math.random().toString();
@@ -526,8 +518,6 @@ export class UtilitariosService {
     }
   }
 
-
-
   public static getToken() {
     let token: any = localStorage.getItem("ms-token");
     return token;
@@ -543,7 +533,6 @@ export class UtilitariosService {
     return data_usuario;
   }
 
-
   public static validarSoloNumeros(val: string) {
     let esValido = false;
     let ExpRegSoloNumeros = "^[0-9]+$";
@@ -553,7 +542,6 @@ export class UtilitariosService {
     return esValido;
   }
 
-
   public static validarSoloTexto(val: string) {
     let esValido = false;
     let ExpRegSoloLetras = "^[a-zA-ZñÑáéíóúÁÉÍÓÚ]+$";
@@ -562,7 +550,6 @@ export class UtilitariosService {
     }
     return esValido;
   }
-
 
   public static validarSoloAlfaNumerico(val: string) {
     let esValido = false;
@@ -592,8 +579,6 @@ export class UtilitariosService {
     return esValido;
   }
 
-
-
   public static cargarSlider(id_elemento: string, config: any) {
 
     setTimeout(() => {
@@ -602,7 +587,6 @@ export class UtilitariosService {
     }, 100);
 
   }
-
 
   public static NombreFecha(fecha: any) {
     let date = new Date(fecha.replace(/-+/g, '/'));
@@ -616,7 +600,6 @@ export class UtilitariosService {
     return date.toLocaleDateString('es-MX', options) + ', ' + hora;
 
   }
-
 
   public static printDiv(divName: any) {
     var printContents = document.getElementById(divName).innerHTML;
@@ -652,7 +635,6 @@ export class UtilitariosService {
     winPrint.close();
 
   }
-
 
   public static compartirComprobante(divId: string, numero: string | null = null) {
     if (numero) {
@@ -700,8 +682,6 @@ export class UtilitariosService {
       }
     }, 200); // Espera 200ms antes de abrir WhatsApp
   }
-
-
 
   public static formatHTMLContent(elementId: any): string {
     const originalElement = document.getElementById(elementId);
@@ -870,19 +850,14 @@ export class UtilitariosService {
     *Consulta tu documento en:* ${atributos.EnlaceConsulta}
     `.trim(); */
 
-    console.log(mensajeWhatsApp);
-
     return mensajeWhatsApp;
   }
-
-
-
-
 
   //ready todo
   public static loadingOn() {
     $.LoadingOverlay("show");
   }
+
   public static loadingOff() {
     $.LoadingOverlay("hide");
   }
@@ -892,16 +867,12 @@ export class UtilitariosService {
       $("#" + ident).LoadingOverlay("show");
     }, 1);
   }
+
   public static loadingElementOff(ident: string) {
     setTimeout(() => {
       $("#" + ident).LoadingOverlay("hide", true);
     }, 1);
   }
-
-
-
-
-
 
   about() {
 
@@ -930,7 +901,6 @@ export class UtilitariosService {
     alertify.alert(html).set('frameless', true);
   }
 
-
   public static async toBase64(file: any) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -940,13 +910,10 @@ export class UtilitariosService {
     });
   }
 
-
   public static replaceText(text: any, key: string, value: string) {
     let response = text.replaceAll(key, value);
     return response;
   }
-
-
 }
 
 class DataAlert {
@@ -957,10 +924,7 @@ class DataAlert {
 class Alertify_Modal_Uno {
   public html!: string;
   public title!: string;
-
-
 }
-
 
 class alertifyModalCustomer {
   public id!: string;

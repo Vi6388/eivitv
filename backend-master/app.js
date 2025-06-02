@@ -34,7 +34,11 @@ app.use('/archivos', express.static(__dirname + '/archivos'));
 
 app.use("/", require("./API/Mensajeria/routers/Route"));
 
-app.use(session({ secret: config.tokenSecreto }));
+app.use(session({
+  secret: config.tokenSecreto,
+  resave: false,
+  saveUninitialized: true
+}));
 
 app.use("/", require("./API/GenaralPublic/routers/Route"));
 app.use("/", require("./API/Authentication/routers/Route"));

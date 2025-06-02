@@ -25,6 +25,7 @@ import { GestorComponent } from './component/content/gestor/gestor.component';
 import { SidebarLeftComponent } from './component/main/sidebar-left/sidebar-left.component';
 import { SidebarRightComponent } from './component/main/sidebar-right/sidebar-right.component';
 import { RecuperarClaveComponent } from './component/main/recuperar-clave/recuperar-clave.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -54,7 +55,8 @@ import { RecuperarClaveComponent } from './component/main/recuperar-clave/recupe
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule
   ], 
   bootstrap: [AppComponent]
 })
