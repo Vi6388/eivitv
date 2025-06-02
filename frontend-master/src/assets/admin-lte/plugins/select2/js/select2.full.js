@@ -4747,7 +4747,7 @@ S2.define('select2/i18n/en',[],function () {
       return 'No results found';
     },
     searching: function () {
-      return 'Searching…';
+      return 'Búsqueda…';
     },
     removeAllItems: function () {
       return 'Remove all items';

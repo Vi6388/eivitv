@@ -749,9 +749,43 @@ export class DasboardComponent implements OnInit, AfterViewInit {
     }
   }
 
+  public ganaciaModal(item_producto: any) {
+    var titulo = "";
+    var botones = {
+      ok: {
+        titulo: "Aceptar",
+        evento: () => DasboardComponent.i.realizarPago(2, item_producto)
+      },
+      cancel: {
+        titulo: "Cancelar",
+        evento: null
+      }
+    }
+    var icono = "fas fa-money-check-alt";
+
+    const Html = `<div style="margin: 10px;">
+            <div class="row">
+              <div class="col-md-12 col-sm-12 col-12">
+                <div class="content-box" style="padding: 0 10px;">
+                  <h5>Confirma realizar la siguiente compra:</h5>
+                  <div>
+                    <div style="display:flex; align-items: center; padding: 10px ;">
+                      <p>Valor: $` + DasboardComponent.i.data_cupo.total_comision + `</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+
+    UtilitariosService.Alertify_Modal(icono, titulo, Html, botones);
+  }
+
 
   public renderBotonPagar(sumaTotal: any, item_producto: ItemProducto) {
     let realizarTipoPago = function (idTipoPago: number) { DasboardComponent.i.realizarPago(idTipoPago, item_producto) }
+    let openGanaciaModal = function () { DasboardComponent.i.ganaciaModal(item_producto) }
 
     let html = `<div  class="input-group-prepend show">
               <button [disabled] type="button" class="btn btn-block btn-lg dropdown-toggle [estilo]" data-toggle="dropdown" aria-expanded="false">
@@ -772,12 +806,11 @@ export class DasboardComponent implements OnInit, AfterViewInit {
 
     setTimeout(() => {
       $(".id_btn_pago_saldo").click(function () { realizarTipoPago(1) });
-      $(".id_btn_pago_ganancia").click(function () { realizarTipoPago(2) });
+      $(".id_btn_pago_ganancia").click(function () { openGanaciaModal() });
     }, 10);
 
     return html;
   }
-
 
 
   public bloquearReferencia(event: any, item_producto: ItemProducto) {
@@ -957,10 +990,10 @@ export class DasboardComponent implements OnInit, AfterViewInit {
         //formulario pago de digitales
         let valido = this.getDataFormulario();
         if (valido) {
-         endPoint = "red_facilito/contratar";
+          endPoint = "red_facilito/contratar";
           let Forms = this.itemConsultaServicio.Forms;
           res = await GlobalService.Post(endPoint, { DatosFactura, IdTipoPago, IdProducto, IdentidadProducto, Referencia, Forms });
-        }else {
+        } else {
           UtilitariosService.Alertify_alert({ mensaje: "Verificar información de datos requeridos.", type: "warning" });
         }
         break;
@@ -972,7 +1005,7 @@ export class DasboardComponent implements OnInit, AfterViewInit {
     if (res.status == 200) {
       let titulo = " COMPROBANTE";
       this.dataPagoRealizado = res.data;
-      let HTMLRecibo = this.dataPagoRealizado.HTMLRecibo; 
+      let HTMLRecibo = this.dataPagoRealizado.HTMLRecibo;
       let Mensaje = this.dataPagoRealizado.Mensaje;
       let OperadoPor = this.dataPagoRealizado.OperadoPor;
       let html = `

@@ -24,6 +24,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { GestorComponent } from './component/content/gestor/gestor.component';
 import { SidebarLeftComponent } from './component/main/sidebar-left/sidebar-left.component';
 import { SidebarRightComponent } from './component/main/sidebar-right/sidebar-right.component';
+import { RecuperarClaveComponent } from './component/main/recuperar-clave/recuperar-clave.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -47,13 +49,14 @@ import { SidebarRightComponent } from './component/main/sidebar-right/sidebar-ri
     ManagerComponent,
     GestorComponent,
     SidebarLeftComponent,
-    SidebarRightComponent
-
+    SidebarRightComponent,
+    RecuperarClaveComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule
   ], 
   bootstrap: [AppComponent]
 })

@@ -12,6 +12,7 @@ import { UsuarioComponent } from './component/content/usuario/usuario.component'
 import { LoginComponent } from './component/main/login/login.component';
 import { PageNotFoundComponent } from './component/main/page-not-found/page-not-found.component';
 import { RegisterComponent } from './component/main/register/register.component';
+import { RecuperarClaveComponent } from './component/main/recuperar-clave/recuperar-clave.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent},  
@@ -31,6 +32,7 @@ const routes: Routes = [
   
   { path: 'login', component: LoginComponent}, 
   { path: 'register', component: RegisterComponent},
+  { path: 'recuperar/clave', component: RecuperarClaveComponent },
   { path: '**', component: PageNotFoundComponent },  
 
 ];

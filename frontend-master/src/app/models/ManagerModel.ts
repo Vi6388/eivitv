@@ -14,6 +14,7 @@ export class configModel {
   tabla!: string; 
   accion!:  Array<string>; 
   columns!: columnModel[];
+  order!: any;
 }
 
 export class columnModel {

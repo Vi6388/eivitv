@@ -8,7 +8,6 @@
     box-sizing: border-box;
     cursor: pointer;
     display: block;
-    height: 28px;
     user-select: none;
     -webkit-user-select: none; }
     .select2-container .select2-selection--single .select2-selection__rendered {
@@ -141,7 +140,7 @@
   .select2-container--default .select2-selection--single .select2-selection__placeholder {
     color: #999; }
   .select2-container--default .select2-selection--single .select2-selection__arrow {
-    height: 26px;
+    height: 32px;
     position: absolute;
     top: 1px;
     right: 1px;

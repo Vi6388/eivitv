@@ -39,7 +39,6 @@ async function UsuarioMostrarLog(req, res, next) {
     res.status(objResponse.status).jsonp(objResponse);
 }
 
-
 function isLoggedIn(req, res, next) {
     Utilitys.ConsoleInfoDebugger(req);
     if (config.jwt) {
@@ -48,7 +47,6 @@ function isLoggedIn(req, res, next) {
         return next();
     }
 }
-
 
 function CheckToken(req, res, next) {
     let token = req.headers['token'];
@@ -72,7 +70,6 @@ function CheckToken(req, res, next) {
         });
     }
 }
-
 
 function SeccionUsuario(req, res, next) {
     // perimite enviar nos datos de seccion de usuario en el req
@@ -108,5 +105,5 @@ module.exports = {
     UsuarioCambioClave,
     UsuarioActualizarDatos,
     UsuarioMostrarLog,
-    GenerarCodigoVerificacion,
+    GenerarCodigoVerificacion
 };

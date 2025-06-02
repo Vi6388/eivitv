@@ -70,7 +70,7 @@ async function UsuarioRegistrar(req) {
     let correo = parametro.correo;
     let telefono = parametro.telefono;
     let id_canton = parametro.id_canton;
-    let id_rol = 3;//ISE INCIALIZA CON ROL CLIENTE
+    let id_rol = 3;
     let codigo = await Utilitys.GenerateKey(8);
     let clave_simple = parametro.clave || (await Utilitys.GenerateKey(8));
     let estado = '1';
@@ -91,24 +91,105 @@ async function UsuarioRegistrar(req) {
             estado,
             id_canton
         };
+
         let objResultUsuario = await ConnectionBD.knex('usuario')
             .select('id')
             .where('correo', correo);
+
         if (objResultUsuario.length != 0) {
             objResponse.message = `El correo ${correo} ya existe.`;
         } else {
             objResultUsuario = await ConnectionBD.knex('usuario')
                 .returning('*')
                 .insert(objData);
+
             if (objResultUsuario.length != 0) {
-                objResponse.status = 201;
                 objResultUsuario = objResultUsuario[0];
                 delete objResultUsuario['clave'];
-                objResponse.message = `Bienvenido sr@ ${objResultUsuario.nombres} ${objResultUsuario.apellidos} su clave fue enviada al email ${objResultUsuario.correo}.`;
+
+                // Try to send email, but don't fail registration if email fails
+                try {
+                    await sendEmailRegister(objResultUsuario, direccion_ip, clave_simple);
+                    objResponse.message = `Bienvenido sr@ ${objResultUsuario.nombres} ${objResultUsuario.apellidos}. Su clave fue enviada al email ${objResultUsuario.correo}.`;
+                } catch (emailError) {
+                    console.log('Email sending failed:', emailError);
+                    objResponse.message = `Bienvenido sr@ ${objResultUsuario.nombres} ${objResultUsuario.apellidos}. Registro exitoso. Su clave es: ${clave_simple}. (Email no pudo ser enviado)`;
+                }
+
+                objResponse.status = 201;
                 objResponse.data = objResultUsuario;
-                sendEmailRegister(objResultUsuario, direccion_ip, clave_simple);
                 Utilitys.CrearLog(objResultUsuario.id, 4, `{"desc":"${objResponse.message}"}`);
             }
+        }
+    } catch (error) {
+        objResponse.status = 500;
+        objResponse.message = error.message;
+    }
+    return objResponse;
+}
+
+async function UsuarioCambioClave(req) {
+
+    let objResponse = new ResponseModel();
+    let parametro = req.body;
+    let clave_simple = parametro.clave;
+    let codigo_verificacion = parametro.codigo_verificacion;
+    try {
+
+        let objDataParametro = await ServiceParametro.getDetalle({ id_parametro_cab: constante.idParametroAcesso, codigo: constante.tiempoExpiraCodigo });
+        let tiempo_expira_codigo = objDataParametro.valor;
+
+        let objResultCodigoVerifica = await ConnectionBD.knex('codigo_verificacion')
+            .returning('*')
+            .update({ estado: 0 })
+            .where('valor', codigo_verificacion)
+            .where('estado', 1);
+        if (objResultCodigoVerifica.length != 0) {
+            objResultCodigoVerifica = objResultCodigoVerifica[0];
+            let id_usuario = objResultCodigoVerifica.id_usuario;
+            let created_at = objResultCodigoVerifica.created_at; // validar tiempo limite de codigo 15 minutos
+            let fecha_sistema = new Date();
+            let minutos = await Utilitys.CalcularMinutosEntreFechas(
+                created_at,
+                fecha_sistema
+            );
+            if (minutos <= tiempo_expira_codigo) {
+                let clave = await Utilitys.hashPassword(clave_simple);
+                let direccion_ip = Utilitys.GetIpClient(req);
+
+                let objData = { clave };
+                let objResultUsuario = await ConnectionBD.knex('usuario')
+                    .update(objData)
+                    .returning('*')
+                    .where('id', id_usuario);
+                if (objResultUsuario.length == 0) {
+                    objResponse.message = `No se puedo hacer el cambio de contraseña.`;
+                } else {
+                    objResponse.status = 201;
+                    objResultUsuario = objResultUsuario[0];
+                    delete objResultUsuario['clave'];
+                    let identificador =
+                        objResultUsuario.dni ||
+                        objResultUsuario.nombre ||
+                        objResultUsuario.codigo ||
+                        objResultUsuario.id;
+                    objResponse.message = `Cambio de contraseña de usuario con identificador ${identificador} realizado correctamente.`;
+                    objResponse.data = objResultUsuario;
+                    objResponse.auth = true; //volver a inicar session
+                    sendEmailCambioClave(objResultUsuario, direccion_ip);
+                    Utilitys.CrearLog(
+                        objResultUsuario.id,
+                        6,
+                        `{"desc":"${objResponse.message}"}`
+                    );
+                }
+            } else {
+                objResponse.status = 403;
+                objResponse.message = `El codigo de verificacion ha superados los ${tiempo_expira_codigo} minutos permitidos.`;
+            }
+        } else {
+            objResponse.status = 403;
+            objResponse.message = `El codigo de verificacion ingresado es incorrecto.`;
         }
     } catch (error) {
         objResponse.status = 500;
@@ -286,7 +367,7 @@ async function UsuarioActualizarDatos(req) {
                 objResponse.data = objResultUsuario;
                 objResponse.auth = true; //volver a inicar session
                 sendEmailActualizacionDatos(objResultUsuario, direccion_ip);
-                Utilitys.CrearLog(  objResultUsuario.id, 8,`{"desc":"${objResponse.message}"}`);
+                Utilitys.CrearLog(objResultUsuario.id, 8, `{"desc":"${objResponse.message}"}`);
             }
         }
     } catch (error) {
@@ -532,12 +613,11 @@ async function sendEmailActualizacionDatos(objUsuario, direccion_ip) {
 }
 
 
-
 module.exports = {
     Login,
     UsuarioRegistrar,
     UsuarioCambioClave,
     UsuarioActualizarDatos,
     UsuarioMostrarLog,
-    GenerarCodigoVerificacion,
+    GenerarCodigoVerificacion
 };

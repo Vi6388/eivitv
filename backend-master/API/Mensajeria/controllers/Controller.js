@@ -16,3 +16,4 @@ async function notificarWhatsApp(req, res, next) {
 module.exports = {
 notificarWhatsApp
 }
+

@@ -293,7 +293,7 @@ inner join cuenta_canal cc  on cc.id = rs.id_cuenta_canal
 inner join cuenta c on c.id = cc.id_cuenta 
 inner join banco b on b.id = c.id_banco 
 inner join canal_pago cp on cp.id = cc.id_canal_pago
-order by rs.created_at  desc; 
+order by rs.fecha  desc; 
 
 
 

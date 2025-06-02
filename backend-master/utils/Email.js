@@ -32,63 +32,79 @@ async function EnviarEmail(data) {
 
   let obj = { status: 403, msj: "Operación incorrecta." };
   let id_parametro_cab = constante.idParametroEmail;
-  let objDataParametro1 = await ServiceParametro.getDetalle({ id_parametro_cab, codigo: constante.status });
-  let status = objDataParametro1.valor;
-  if (status == constante.statusActivo) {
+  
+  try {
+    let objDataParametro1 = await ServiceParametro.getDetalle({ id_parametro_cab, codigo: constante.status });
+    let status = objDataParametro1.valor;
+    
+    if (status == constante.statusActivo) {
+      let objDataParametro2 = await ServiceParametro.getDetalle({ id_parametro_cab, codigo: constante.email });
+      let objDataParametro3 = await ServiceParametro.getDetalle({ id_parametro_cab, codigo: constante.clientId });
+      let objDataParametro4 = await ServiceParametro.getDetalle({ id_parametro_cab, codigo: constante.clientSecret });
+      let objDataParametro5 = await ServiceParametro.getDetalle({ id_parametro_cab, codigo: constante.refreshToken });
 
-    let objDataParametro2 = await ServiceParametro.getDetalle({ id_parametro_cab, codigo: constante.email });
-    let objDataParametro3 = await ServiceParametro.getDetalle({ id_parametro_cab, codigo: constante.clientId });
-    let objDataParametro4 = await ServiceParametro.getDetalle({ id_parametro_cab, codigo: constante.clientSecret });
-    let objDataParametro5 = await ServiceParametro.getDetalle({ id_parametro_cab, codigo: constante.refreshToken });
+      let email = objDataParametro2.valor;
+      let clientId = objDataParametro3.valor;
+      let clientSecret = objDataParametro4.valor;
+      let refreshToken = objDataParametro5.valor;
+      
+      // Validate email configuration
+      if (!email || !clientId || !clientSecret || !refreshToken) {
+        throw new Error('Email configuration incomplete. Please check email parameters.');
+      }
+      
+      let api = constante.authEmail.api;
+      let service = constante.authEmail.service;
+      let type = constante.authEmail.type;
 
-    let email = objDataParametro2.valor;
-    let clientId = objDataParametro3.valor;
-    let clientSecret = objDataParametro4.valor;
-    let refreshToken = objDataParametro5.valor;
-    let api = constante.authEmail.api;
-    let service = constante.authEmail.service;
-    let type = constante.authEmail.type;
+      let dataEmail = { api, service, type, email, clientId, clientSecret, refreshToken };
 
-    let dataEmail = { api, service, type, email, clientId, clientSecret, refreshToken };
+      let asunto = data.asunto;
+      console.log("Enviando correo => " + asunto);
+      let para = data.para || [];
+      let texto = data.texto;
+      let html = data.html;
+      let attachments = data.attachments;
+      
+      var mailOptions = {
+        from: email,
+        to: para,
+        subject: asunto,
+        text: texto,
+        html: html,
+        attachments,
+      };
 
-    let asunto = data.asunto;
-    console.log("Enviando correo => " + asunto);
-    let para = data.para || [];
-    let texto = data.texto;
-    let html = data.html;
-    let attachments = data.attachments;
-    var mailOptions = {
-      from: email,//sender address
-      to: para,//list of receivers
-      subject: asunto,//Subject line
-      text: texto,//plaintext body
-      html: html,//html body
-      attachments,//adjuntos
-    };
-
-    mail_rover(dataEmail, async function (transporter) {
-      return await transporter.sendMail(mailOptions, async function (error, response) {
-        if (error) {
-          obj.status = 403;
-          obj.msj = error.message;
-          obj.data = error;
-          console.log("Envio de correo => " + obj.msj);
-          console.log(obj);
-          return obj;
-        } else {
-          obj.status = 200;
-          obj.msj = " Correo enviado exitosamente!!";
-          obj.data = response;
-          console.log("Envio de correo => " + obj.msj);
-          console.log(obj);
-          return obj;
-        }
+      return new Promise((resolve, reject) => {
+        mail_rover(dataEmail, async function (transporter) {
+          transporter.sendMail(mailOptions, async function (error, response) {
+            if (error) {
+              obj.status = 403;
+              obj.msj = error.message;
+              obj.data = error;
+              console.log("Error enviando correo => " + obj.msj);
+              console.log(obj);
+              reject(obj);
+            } else {
+              obj.status = 200;
+              obj.msj = "Correo enviado exitosamente!!";
+              obj.data = response;
+              console.log("Envio de correo => " + obj.msj);
+              resolve(obj);
+            }
+          });
+        });
       });
-    });
-  } else {
-    console.log("servicio de correo => " + status);
+    } else {
+      throw new Error("Servicio de correo desactivado: " + status);
+    }
+  } catch (error) {
+    obj.status = 500;
+    obj.msj = "Error en configuración de email: " + error.message;
+    obj.data = error;
+    console.log("Error email service => " + obj.msj);
+    throw obj;
   }
-
 }
 
 async function FormatoEstandarHTML(params) {

@@ -39,6 +39,7 @@ CREATE TABLE "producto" (
 "estado" int4,
 "created_at" timestamp(0) DEFAULT  timezone('America/Guayaquil',now()),
 "updated_at" timestamp(0) DEFAULT  timezone('America/Guayaquil',now()),
+"correo_repetido" int4,
 PRIMARY KEY ("id") 
 )
 WITHOUT OIDS;

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UtilitariosService } from 'src/app/service/utilitarios.service';
-import { ParametrosService } from '../../../service/parametros.service'; 
+import { ParametrosService } from '../../../service/parametros.service';
 import { GlobalService } from 'src/app/service/global.service';
 import { menuModel } from 'src/app/models/MenuModel';
 
@@ -13,13 +13,16 @@ export class SidebarLeftComponent implements OnInit {
 
   public parametros: any = ParametrosService;
   public dataUsuario: any = UtilitariosService.getDataUsuario();
-  constructor() { }
-  public dataMenu: Array< menuModel> = [];
+  constructor(private utilitariosServce: UtilitariosService) { }
+  public dataMenu: Array<menuModel> = [];
 
+  public textType: string = "";
 
-
-  ngOnInit(): void { 
-   this.getDataMenu();
+  ngOnInit(): void {
+    this.getDataMenu();
+    this.utilitariosServce.currentTextType.subscribe(textType => {
+      this.textType = textType;
+    });
   }
 
 

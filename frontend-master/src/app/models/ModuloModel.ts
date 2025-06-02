@@ -15,6 +15,7 @@ export class configModel {
   accion!:  Array<string>; 
   columns!: columnModel[]; 
   opciones!: any[];
+  order!: any;
 }
 
 export class columnModel {

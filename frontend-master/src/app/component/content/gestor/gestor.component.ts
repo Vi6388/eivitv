@@ -55,6 +55,7 @@ export class GestorComponent implements OnInit, AfterViewInit {
       let res: any = await GlobalService.Post(endPoint, { id_perfil, id_modulo });
       if (res.status == 200) {
         this.dataModulo = res.data;
+        console.log(this.dataModulo);
         let opciones: any[] = [];
         this.dataModulo.accion.forEach(el => {
           let fun = this.extOpciones[el];
@@ -64,6 +65,11 @@ export class GestorComponent implements OnInit, AfterViewInit {
         });
 
         this.dataModulo.config.opciones = opciones;
+        if(id_modulo === 9) {
+          this.dataModulo.config.order = 3;
+        } else if(id_modulo === 35) {
+          this.dataModulo.config.order = 5;
+        }
 
         this.objDataManager = this.dataModulo.config;
       }

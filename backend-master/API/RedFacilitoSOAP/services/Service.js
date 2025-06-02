@@ -497,6 +497,13 @@ async function Contratar(req) {
   let fecha = fechaCreacion.toLocaleDateString();
   let hora = fechaCreacion.toLocaleTimeString();
 
+  let Forms = req.body;
+  Forms = Forms.Forms;
+  let arrCliente = Forms.reduce((obj, item) => {
+    obj[item.id] = item.value;
+    return obj;
+  }, {});
+
   let codigo = await Utilitys.GenerateKey(8);
 
   let idTipoPago = objRequest.IdTipoPago;
@@ -539,12 +546,17 @@ async function Contratar(req) {
       throw new Error("No se encontro registro de producto.");
     }
 
-
     let reqPerfiles = objCatalogo.perfiles;
     let reqTipoDuracion = objCatalogo.tipo_duracion;
     let reqCantidaDuracion = objCatalogo.cantidad_duracion;
+    let correo_repetido = objProducto.correo_repetido;
 
-    let objDigital = await getCuentaRecomendada({ reqPerfiles, reqTipoDuracion, reqCantidaDuracion, idProducto });
+    let objDigital = await getCuentaRecomendada2({ reqPerfiles, reqTipoDuracion, reqCantidaDuracion, idProducto, arrCliente, correo_repetido });
+    let pantallasAsignadas = await seleccionarCuentasDigitales(objDigital.pantallas_disponibles, reqPerfiles);
+
+    let pantallasTexto = pantallasAsignadas
+      .map(p => `Pantalla ${p}`)
+      .join(', ');
 
 
     let duracion = Utilitys.getTipoDuracion(reqTipoDuracion, reqCantidaDuracion);
@@ -554,7 +566,7 @@ async function Contratar(req) {
     let metodo = 'Digital';
     let valorConComision = objCatalogo.precio || 0;
     let comisionTotal = objCatalogo.comision || 0;
-    let costoTotal =valorConComision ;
+    let costoTotal = valorConComision;
 
     let htmlCredenciales = "<h4>Credenciales</h4>";
     if (objDigital.codigo) {
@@ -572,6 +584,14 @@ async function Contratar(req) {
     if (objDigital.numero_perfile) {
       htmlCredenciales += `<p><strong>Numero de Perfiles:</strong>${objDigital.numero_perfile}</p>`;
     }
+    if (objDigital.pantallas_disponibles) {
+      htmlCredenciales += `<p><strong>Pantallas Asignadas:</strong>${pantallasTexto}</p>`;
+    }
+    //****SERIALIZAR RECIBO */
+    let objConsulta = {};
+
+    objConsulta.OperadoPor = "AKA PAGO";
+    objConsulta.Mensaje = "Transacción realizada correctamente";
 
     let titlulo = objProducto.recibo_titulo || "Recibo de venta";
     let comprobante = `
@@ -587,13 +607,14 @@ async function Contratar(req) {
     <p><strong>Total: </strong> ${valorConComision}</p> 
 
    ${htmlCredenciales}
-
     <p><strong>Recomendación: </strong>${objProducto.info_add}</p>
+
+    <p><strong>Operado Por: </strong>${objConsulta.OperadoPor}</p>
+    <p><strong>Mensaje: </strong>${objConsulta.Mensaje}</p>
 
 </div>
 `;
-
-
+    objConsulta.HTMLRecibo = comprobante;
 
     let validaSaldo = await validarSaldoDisponible(req, costoTotal, idTipoPago);
 
@@ -602,14 +623,9 @@ async function Contratar(req) {
       throw new Error(validaSaldo);
     }
 
-    let objConsulta = {};
-
     await ConnectionBD.knex.transaction(async function (trx) {
-      //****SERIALIZAR RECIBO */
-
-      objConsulta.HTMLRecibo = comprobante;
-      objConsulta.OperadoPor = "AKA PAGO";
-      objConsulta.Mensaje = "Transacción realizada correctamente";
+      //deshabilita las cuentas digitales compradas
+      await actualizarDigital(objDigital, pantallasAsignadas);
 
       //****CREAR REGISTRO DE VENTA */ 
       let dataVentaCab = {
@@ -644,8 +660,10 @@ async function Contratar(req) {
         json_detalles: "",
         estado: 1,
         created_at: fechaCreacion,
-        updated_at: fechaCreacion
-
+        updated_at: fechaCreacion,
+        id_digital: objDigital.id_digital,
+        dni_comprador: arrCliente['dni'],
+        correo_comprador: arrCliente['correo']
       };
 
       let objVentaDet = await ConnectionBD.knex('venta_detalle')
@@ -717,6 +735,66 @@ async function Contratar(req) {
   return objResponse;
 }
 
+async function actualizarDigital(objDigital, pantallasAsignadas) {
+
+  let pantallasDisponiblesAntes = objDigital.pantallas_disponibles;
+
+  if (typeof pantallasDisponiblesAntes === 'string') {
+    pantallasDisponiblesAntes = JSON.parse(
+      pantallasDisponiblesAntes.replace(/{/g, '[').replace(/}/g, ']')
+    );
+  }
+
+  // Filtrar las pantallas, quitando las que se acaban de asignar
+  const pantallasActualizadas = pantallasDisponiblesAntes.filter(
+    p => !pantallasAsignadas.includes(p)
+  );
+
+
+  // Convertir al formato PostgreSQL: '{"1","3"}'
+  const pantallasFormatoDB = `{${pantallasActualizadas.map(p => `"${p}"`).join(',')}}`;
+
+  const dias = parseInt(objDigital.dias_limite_venta) || 0;
+
+  //actualiza la fecha limite de venta agregando los dias de duracion
+  let fechaLimiteVenta = new Date(Date.now() + dias * 24 * 60 * 60 * 1000);
+
+
+  // Actualizar en la base de datos
+  await ConnectionBD.knex('digital')
+    .where('id', objDigital.id_digital)
+    .update({
+      pantallas_disponibles: pantallasFormatoDB,
+      fecha_limite_venta: fechaLimiteVenta,
+      updated_at: new Date()
+    });
+
+}
+
+
+async function seleccionarCuentasDigitales(pantallas_disponibles, perfiles) {
+  let disponibles = pantallas_disponibles;
+
+  // Asegurar que sea un array JS
+  if (typeof disponibles === 'string') {
+    try {
+      disponibles = JSON.parse(disponibles.replace(/{/g, '[').replace(/}/g, ']'));
+    } catch (e) {
+      throw new Error('Error al convertir pantallas_disponibles a array');
+    }
+  }
+
+  // Validar si hay suficientes pantallas disponibles
+  if (disponibles.length < perfiles) {
+    throw new Error(`No hay suficientes pantallas disponibles. Se requieren ${perfiles}, pero solo hay ${disponibles.length}`);
+  }
+
+  // Obtener las primeras N pantallas
+  const pantallas_asignadas = disponibles.slice(0, perfiles);
+
+  return pantallas_asignadas;
+}
+
 
 async function getCuentaRecomendada(params) {
   const { reqPerfiles, reqTipoDuracion, reqCantidaDuracion, idProducto } = params;
@@ -773,7 +851,7 @@ async function getCuentaRecomendada(params) {
     if (reqPerfiles <= perfiles) {
       if (reqDuracionDias <= duracion) {
         objCuenta = cuenta;
-        index=  arrayDigital.length; 
+        index = arrayDigital.length;
       }
     }
   }
@@ -784,6 +862,108 @@ async function getCuentaRecomendada(params) {
   }
   return objCuenta;
 }
+
+async function getCuentaRecomendada2(params) {
+  const { reqPerfiles, reqTipoDuracion, reqCantidaDuracion, idProducto, arrCliente, correo_repetido } = params;
+
+  // Paso 1: Calcular la duración solicitada en días
+  let reqDuracionDias = 0;
+  switch (reqTipoDuracion) {
+    case 1: reqDuracionDias = reqCantidaDuracion * 1; break;      // Días
+    case 2: reqDuracionDias = reqCantidaDuracion * 30; break;     // Meses
+    case 3: reqDuracionDias = reqCantidaDuracion * 365; break;    // Años
+  }
+
+  // Definir orden dinámico según el valor de correo_repetido
+  let ordenamiento = correo_repetido == 0
+    ? [
+      { column: "cuenta_usada", order: "asc" },
+      { column: "digi.numero_perfil", order: "asc" },
+      { column: "created_at", order: "asc" },
+      { column: "duracion", order: "asc" }
+    ]
+    : [
+      { column: "digi.numero_perfil", order: "asc" },
+      { column: "created_at", order: "asc" },
+      { column: "duracion", order: "asc" }
+    ];
+
+  let arrayDigital = await ConnectionBD.knex("digital as digi")
+    .select([
+      "digi.id as id_digital",
+      "digi.id_producto",
+      "digi.codigo",
+      "digi.proveedor",
+      "digi.nombre",
+      "digi.descripcion",
+      "digi.costo",
+      "digi.credencial_usuario",
+      "digi.credencial_clave",
+      "digi.credencial_pin",
+      "digi.observacion",
+      "digi.numero_perfil",
+      "digi.fecha_valides_inicio",
+      "digi.fecha_valides_fin",
+      "pantallas_disponibles",
+      "digi.estado",
+      "digi.created_at",
+      "digi.updated_at",
+      "digi.referencias",
+      ConnectionBD.knex.raw("EXTRACT(DAY FROM (digi.fecha_valides_fin - digi.fecha_valides_inicio)) as duracion"),
+      ConnectionBD.knex.raw(`
+      CASE 
+        WHEN EXISTS (
+          SELECT 1 
+          FROM venta_detalle vd 
+          WHERE vd.id_digital = digi.id 
+            AND vd.dni_comprador = ?
+        ) THEN 1
+        ELSE 0
+      END AS cuenta_usada
+    `, [arrCliente['dni']])
+    ])
+    .where({
+      "digi.id_producto": idProducto,
+      "digi.estado": 1
+    })
+    .orderBy(ordenamiento);
+
+  // Paso 3: Filtrar las cuentas que cumplan con el número de perfiles, duración y pantallas disponibles
+  for (let cuenta of arrayDigital) {
+    let perfiles = cuenta.numero_perfil;
+    let duracion = cuenta.duracion;
+
+    if (reqPerfiles > perfiles || reqDuracionDias > duracion) {
+      continue; // No cumple requisitos
+    }
+    //si hoy es mayo a la fecha_limite_venta
+    if (cuenta.fecha_limite_venta != null) {
+      if (new Date() > new Date(cuenta.fecha_limite_venta)) {
+        continue;
+      }
+    }
+
+
+    let pantallas = cuenta.pantallas_disponibles || "{}";
+
+    // Parsear pantallas si vienen como string tipo '{"1","2"}'
+    if (typeof pantallas === 'string') {
+      try {
+        pantallas = JSON.parse(pantallas.replace(/{/g, '[').replace(/}/g, ']'));
+      } catch (e) {
+        pantallas = [];
+      }
+    }
+
+    if (pantallas.length >= reqPerfiles) {
+
+      return cuenta;
+    }
+  }
+
+  throw new Error("No se encontraron cuentas digitales disponibles con los requisitos solicitados.");
+}
+
 
 async function validarSaldoDisponible(req, costoTotal, idTipoPago) {
   const SaldosResponseModel = require('../../Saldos/models/SaldosResponseModel');
