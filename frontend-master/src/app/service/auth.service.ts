@@ -18,8 +18,7 @@ export class AuthService {
 
 	public async getLogin(correo: string, clave: string) {
 
-		// const url = ParametrosService.url_service+ '/login';
-		const url = 'http://localhost:5006/login';
+		const url = ParametrosService.url_service+ '/login';
 		const headers = new Headers();
 		headers.append('Accept', 'application/json');
 		headers.append('Content-Type', 'application/json');
